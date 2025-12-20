@@ -6,38 +6,34 @@
     <title>청개구리샤시 하자진단AI앱</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     <style>
+        /* 기본 스타일 */
         body { font-family: 'Malgun Gothic', 'Noto Sans KR', sans-serif; margin: 0; padding: 0; background: #f0f2f5; }
-        .container { max-width: 500px; margin: 0 auto; background: white; min-height: 100vh; box-shadow: 0 0 15px rgba(0,0,0,0.1); }
+        .container { max-width: 500px; margin: 0 auto; background: white; min-height: 100vh; box-shadow: 0 0 15px rgba(0,0,0,0.1); position: relative; padding-bottom: 180px; /* 푸터 공간 확보 */ }
         
-        /* [헤더 스타일] 파란색 바탕 + 좌측 그림 + 우측 글자 */
+        /* 헤더 스타일 */
         .header { 
             width: 100%; 
             background: #1c3664; 
             display: flex;       
             align-items: center; 
             justify-content: center; 
-            padding: 15px 10px;  
+            padding: 12px 10px;  
             box-sizing: border-box;
-            gap: 15px;           
+            gap: 10px;           
         }
-        
-        .header img { 
-            height: 50px;       
-            width: auto;        
-            display: block;
-            filter: drop-shadow(2px 2px 4px rgba(0,0,0,0.3)); 
-        }
-
+        .header img { height: 45px; width: auto; display: block; }
         .header-title {
-            color: white;       
-            font-size: 1.4rem;  
-            font-weight: 800;   
+            color: white;
+            font-size: 1.3rem;
+            font-weight: 800;
             margin: 0;
             line-height: 1;
-            white-space: nowrap; 
-            text-shadow: 1px 1px 3px rgba(0,0,0,0.5); 
+            white-space: nowrap;
+            letter-spacing: -0.5px;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
         }
 
+        /* 내용 영역 스타일 */
         .content { padding: 15px; }
         .row-group { display: flex; gap: 10px; margin-bottom: 15px; }
         .half-box { flex: 1; }
@@ -54,13 +50,31 @@
         button.sub-btn { width: 48%; padding: 14px; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; color: white; font-size: 16px; }
         
         #result { white-space: pre-wrap; background: #fff; border: 1px solid #333; padding: 15px; margin-top: 20px; min-height: 100px; line-height: 1.6; border-radius: 8px; page-break-inside: avoid; }
-        .footer { display:flex; justify-content:space-between; margin-top: 20px; padding-bottom: 30px; }
+        .footer-buttons { display:flex; justify-content:space-between; margin-top: 20px; margin-bottom: 20px; }
 
-        body.pdf-mode .container { box-shadow: none; max-width: 100%; }
+        /* [추가된 사업자 정보 푸터] */
+        .business-info {
+            background: #1c3664;
+            color: white;
+            padding: 20px;
+            font-size: 0.75rem;
+            line-height: 1.6;
+            text-align: left;
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            box-sizing: border-box;
+        }
+        .business-info h3 { margin: 0 0 10px 0; font-size: 1.1rem; font-weight: bold; }
+        .business-info p { margin: 2px 0; opacity: 0.9; }
+
+        /* PDF 모드 */
+        body.pdf-mode .container { box-shadow: none; max-width: 100%; min-height: auto; padding-bottom: 0; }
         body.pdf-mode .content { padding: 10px 25px; }
-        body.pdf-mode button, body.pdf-mode .footer, body.pdf-mode #status, body.pdf-mode input[type="file"] { display: none !important; }
+        body.pdf-mode button, body.pdf-mode .footer-buttons, body.pdf-mode #status, body.pdf-mode input[type="file"] { display: none !important; }
         body.pdf-mode input[type="text"], body.pdf-mode input[readonly] { border: none; background: transparent; padding: 0; font-weight: bold; }
         body.pdf-mode .preview-area { border: none; background: transparent; height: auto; min-height: 250px; }
+        body.pdf-mode .business-info { position: relative; margin-top: 30px; }
     </style>
 </head>
 <body>
@@ -114,14 +128,23 @@
             <div id="result" style="min-height:50px;">진단 시작 버튼을 누르면 결과가 여기에 표시됩니다.</div>
         </div>
 
-        <div class="footer">
+        <div class="footer-buttons">
             <button class="sub-btn" style="background:#2E7D32;" onclick="location.href='tel:1599-7380'">📞 수리문의</button>
             <button class="sub-btn" style="background:#1c3664;" onclick="savePDF()">💾 PDF 저장</button>
         </div>
     </div>
+
+    <div class="business-info">
+        <h3>청개구리샤시</h3>
+        <p>상호 : 청개구리샤시 | 사업자등록번호 : 123-36-31426 | 대표 : 전영웅</p>
+        <p>경기도 군포시 용호1로 21번길 15, 용호대림 102-1501</p>
+        <p>고객센터 1599 - 7380 (상담시간 오전08:00 ~ 오후5시까지 일요일 제외)</p>
+        <p style="margin-top: 10px; opacity: 0.7;">COPYRIGHT ⓒ 2025 청개구리주택샤시. All Rights Reserved.</p>
+    </div>
 </div>
 
 <script>
+    // 🔑 여기에 아까 발급받은 '새 API 키'를 꼭 다시 넣어주세요! (따옴표 유지)
     const API_KEY = "AIzaSyBU88j1q2PIlJ5k8UlGC4QKjwEkEE8GHmo"; 
 
     window.onload = function() {
@@ -165,7 +188,8 @@
                 }
             }
 
-            const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${API_KEY}`, {
+            // [수정됨] 모델 이름을 'gemini-1.5-flash-latest'로 변경하여 오류 해결
+            const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent?key=${API_KEY}`, {
                 method: 'POST', headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ contents: [{ parts: parts }] })
             });
@@ -174,7 +198,10 @@
             if(data.error) throw new Error(data.error.message);
             resultDiv.innerText = data.candidates[0].content.parts[0].text;
 
-        } catch (e) { resultDiv.innerText = "❌ 오류 발생: " + e.message; }
+        } catch (e) { 
+            console.error(e);
+            resultDiv.innerText = "❌ 오류가 발생했습니다. 잠시 후 다시 시도해주세요.\n(" + e.message + ")"; 
+        }
         finally { btn.disabled = false; status.style.display = 'none'; }
     }
 
@@ -204,7 +231,7 @@
         document.body.classList.add('pdf-mode');
         const element = document.getElementById('pdfArea');
         const opt = { 
-            margin: [5, 0, 5, 0], 
+            margin: 0, 
             filename: '창호진단보고서.pdf',
             image: { type: 'jpeg', quality: 1 },
             html2canvas: { scale: 2, useCORS: true, scrollY: 0 },
