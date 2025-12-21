@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>청개구리샤시 하자진단AI앱</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <style>
+        /* 기본 설정 */
+        body { font-family: 'Malgun Gothic', 'Noto Sans KR', sans-serif; margin: 0; padding: 0; background: #f0f2f5; }
+        
+        .container { 
+            max-width: 500px; 
+            margin: 0 auto; 
+            background: white; 
+            min-height: 100vh; 
+            box-shadow: 0 0 15px rgba(0,0,0,0.1); 
+            position: relative; 
+            padding-bottom: 130px; /* 하단 푸터 공간 확보 */
+        }
+        
+        /* 헤더 */
+        .header { width: 100%; background: #1c3664; display: flex; align-items: center; justify-content: center; padding: 12px 10px; box-sizing: border-box; gap: 10px; }
+        .header img { height: 45px; width: auto; display: block; }
+        .header-title { color: white; font-size: 1.3rem; font-weight: 800; margin: 0; line-height: 1; white-space: nowrap; letter-spacing: -0.5px; text-shadow: 1px 1px 2px rgba(0,0,0,0.5); }
+
+        /* 내용 영역 */
+        .content { padding: 15px; }
+        .row-group { display: flex; gap: 10px; margin-bottom: 15px; }
+        .half-box { flex: 1; }
+        .box { margin-bottom: 20px; padding: 15px; border: 1px solid #ddd; border-radius: 8px; background: #f8f9fa; page-break-inside: avoid; break-inside: avoid; }
+        
+        label { font-weight: bold; display: block; margin-bottom: 8px; color: #333; font-size: 1rem; }
+        input[type="text"] { width: 100%; padding: 12px; border: 1px solid #ccc; border-radius: 6px; box-sizing: border-box; font-size: 1rem; }
+        input[readonly] { background: #e9ecef; color: #555; text-align: center; font-weight: bold; }
+
+        .preview-area { width: 100%; height: 300px; background: #e9ecef; display: flex; align-items: center; justify-content: center; margin-bottom: 10px; overflow: hidden; border-radius: 8px; border: 2px dashed #ccc; }
+        .preview-area img { width: 100%; height: 100%; object-fit: contain; }
+        
+        button.main-btn { width: 100%; padding: 18px; background: #1976D2; color: white; border: none; font-size: 18px; font-weight: bold; border-radius: 8px; cursor: pointer; margin-top: 10px; box-shadow: 0 4px 6px rgba(0,0,0,0.2); }
+        button.sub-btn { width: 48%; padding: 14px; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; color: white; font-size: 16px; }
+        
+        #result { white-space: pre-wrap; background: #fff; border: 1px solid #333; padding: 15px; margin-top: 20px; min-height: 100px; line-height: 1.6; border-radius: 8px; page-break-inside: avoid; }
+        .footer-buttons { display:flex; justify-content:space-between; margin-top: 20px; margin-bottom: 20px; }
+
+        /* [푸터 디자인] 주소 삭제 및 간격 조정 */
+        .business-info {
+            background: #1c3664;
+            color: white;
+            padding: 12px 20px;
+            text-align: left;
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            box-sizing: border-box;
+        }
+        .business-info h3 { margin: 0 0 3px 0; font-size: 1.1rem; font-weight: bold; }
+        
+        /* 정보 텍스트: 한 줄로 표시, 글자 크기 축소 */
+        .info-text { 
+            font-size: 0.55rem; 
+            letter-spacing: -0.5px; 
+            opacity: 0.9; 
+            margin: 2px 0; 
+            white-space: nowrap; 
+        }
+        .contact-text { font-size: 0.7rem; margin: 2px 0; opacity: 0.9; }
+        .copy-text { margin-top: 5px; opacity: 0.6; font-size: 0.6rem; }
+
+        /* PDF 저장 모드 */
+        body.pdf-mode .container { margin: 0; padding: 0; box-shadow: none; max-width: 100%; }
+        body.pdf-mode .content { padding: 10px 20px; }
+        body.pdf-mode button, body.pdf-mode .footer-buttons, body.pdf-mode #status, body.pdf-mode input[type="file"] { display: none !important; }
+        body.pdf-mode input[type="text"], body.pdf-mode input[readonly] { border: none; background: transparent; padding: 0; font-weight: bold; }
+        body.pdf-mode .preview-area { border: none; background: transparent; height: auto; min-height: 250px; }
+        body.pdf-mode .business-info { position: relative; margin-top: 20px; padding: 10px 20px; }
+    </style>
+</head>
+<body>
+
+<div class="container" id="pdfArea">
+    <div class="header">
+        <img src="logo.jpg" alt="로고" onerror="this.style.display='none'">
+        <h1 class="header-title">청개구리샤시 하자진단AI앱</h1>
+    </div>
+
+    <div class="content">
+        <div class="row-group">
+            <div class="half-box">
+                <label>🏠 장소 입력</label>
+                <input type="text" id="locInput" placeholder="예: 안방 천장 누수">
+            </div>
+            <div class="half-box">
+                <label>📅 진단 일자</label>
+                <input type="text" id="dateInput" readonly>
+            </div>
+        </div>
+
+        <div class="box">
+            <label>📝 하자 내용 설명</label>
+            <input type="text" id="descInput" placeholder="증상을 입력하세요">
+        </div>
+
+        <div class="box">
+            <label>📸 사진 1 (현장 전체 - 필수)</label>
+            <div class="preview-area"><img id="img1"></div>
+            <input type="file" id="file1" accept="image/*" onchange="preview(1)">
+        </div>
+
+        <div class="box">
+            <label>📸 사진 2 (하자 부위 - 선택)</label>
+            <div class="preview-area"><img id="img2"></div>
+            <input type="file" id="file2" accept="image/*" onchange="preview(2)">
+        </div>
+
+        <div class="box">
+            <label>📸 사진 3 (기타 - 선택)</label>
+            <div class="preview-area"><img id="img3"></div>
+            <input type="file" id="file3" accept="image/*" onchange="preview(3)">
+        </div>
+
+        <button class="main-btn" id="btnRun" onclick="runAI()">🚀 빠른 하자 진단 시작</button>
+        <div id="status" style="text-align:center; margin-top:10px; color:#1976D2; display:none; font-weight:bold;">⏳ AI가 하자를 신속하게 분석 중입니다...</div>
+
+        <div class="box" style="margin-top:20px;">
+            <label>💡 AI 하자 진단 결과 및 솔루션</label>
+            <div id="result" style="min-height:50px;">진단 시작 버튼을 누르면 결과가 여기에 표시됩니다.</div>
+        </div>
+
+        <div class="footer-buttons">
+            <button class="sub-btn" style="background:#2E7D32;" onclick="location.href='tel:1599-7380'">📞 수리문의</button>
+            <button class="sub-btn" style="background:#1c3664;" onclick="savePDF()">💾 PDF 저장</button>
+        </div>
+    </div>
+
+    <div class="business-info">
+        <h3>청개구리샤시</h3>
+        <p class="info-text">상호 : 청개구리샤시 | 사업자등록번호 : 123-36-31426 | 대표 : 전영웅</p>
+        <p class="contact-text">고객센터 1599 - 7380 (상담시간 오전08:00 ~ 오후5시까지 일요일 제외)</p>
+        <p class="copy-text">COPYRIGHT ⓒ 2025 청개구리주택샤시. All Rights Reserved.</p>
+    </div>
+</div>
+
+<script>
+    // ⚠️ [필수] 아래 따옴표 안에 선생님의 진짜 '영어 키'를 꼭 넣어주세요!
+    // 예: const API_KEY = "AIzaSy..."; 
+    const API_KEY = "AIzaSyBU88j1q2PIlJ5k8UlGC4QKjwEkEE8GHmo"; 
+
+    window.onload = function() {
+        const now = new Date();
+        document.getElementById('dateInput').value = now.toLocaleDateString() + " " + now.toLocaleTimeString().slice(0,5);
+    };
+
+    function preview(num) {
+        const fileBox = document.getElementById('file'+num);
+        const imgTag = document.getElementById('img'+num);
+        if (fileBox.files && fileBox.files[0]) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                imgTag.src = e.target.result;
+                imgTag.style.display = 'block';
+            };
+            reader.readAsDataURL(fileBox.files[0]);
+        }
+    }
+
+    async function runAI() {
+        const btn = document.getElementById('btnRun');
+        const status = document.getElementById('status');
+        const resultDiv = document.getElementById('result');
+        
+        btn.disabled = true; status.style.display = 'block';
+        resultDiv.innerText = "⏳ AI가 하자를 신속하게 분석 중입니다... 잠시만 기다려주세요.";
+
+        try {
+            let parts = [{ 
+                text: `[건축 하자 진단 요청]\n장소: ${document.getElementById('locInput').value}\n` +
+                      `하자 설명: ${document.getElementById('descInput').value}\n\n` +
+                      `위 정보와 사진을 바탕으로 건축/시설
