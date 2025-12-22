@@ -12,12 +12,12 @@
             padding-bottom: 130px; position: relative; box-shadow: 0 0 15px rgba(0,0,0,0.1); 
         }
         
-        /* [Ver 5.0] 진짜 최종 버전 (빨간색 태그) */
+        /* [Ver 6.0] 최종 해결 버전 (남색 태그) */
         .header { width: 100%; background: #102e52; padding: 0; display: block; position: relative; }
         .header img { width: 100%; height: auto; display: block; }
         .version-tag {
             position: absolute; bottom: 5px; right: 10px;
-            background: #d32f2f; color: #fff; /* 빨간색으로 변경 (최종 강조) */
+            background: #000080; color: #fff; /* 남색으로 변경 */
             padding: 3px 8px; border-radius: 4px;
             font-size: 0.8rem; font-weight: bold; box-shadow: 0 2px 4px rgba(0,0,0,0.2);
         }
@@ -71,7 +71,7 @@
 <div class="container" id="pdfArea">
     <div class="header">
         <img src="12.jpg" alt="청개구리 하자진단 AI분석앱" onerror="this.style.display='none'">
-        <div class="version-tag">Ver 5.0 (완성)</div>
+        <div class="version-tag">Ver 6.0 (해결)</div>
     </div>
 
     <div class="content">
@@ -139,7 +139,7 @@
 </div>
 
 <script>
-    // ⚠️ 방금 만드신 '새로운 키'를 따옴표 안에 넣어주세요!
+    // ⚠️ 아까 만든 '새 키'를 그대로 사용하세요! (키는 정상입니다)
     const API_KEY = "AIzaSyCNnJwIeC2z2RkK9klT4r86n3oNkE61VVw"; 
 
     window.onload = function() {
@@ -193,10 +193,10 @@
                 }
             }
 
-            // ⭐ [Ver 5.0] 진짜 해결책 ⭐
-            // 아까 탐지기 화면 맨 위에 있던 'gemini-2.0-flash-exp'를 사용합니다.
-            // (1.5도 2.5도 아닌, 2.0이 정답이었습니다!)
-            const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-exp:generateContent?key=${API_KEY}`, {
+            // ⭐ [Ver 6.0 핵심] ⭐
+            // 실험용(2.0-exp) 대신 안정적인 'gemini-2.5-flash' 사용
+            // (아까 탐지기 명단 맨 위에 있던 놈입니다!)
+            const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${API_KEY}`, {
                 method: 'POST', headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ contents: [{ parts: parts }] })
             });
@@ -204,13 +204,17 @@
             const data = await response.json();
             
             if(data.error) {
+                // 또 "속도 위반" 오류가 나면 친절하게 알려줍니다.
+                if(data.error.message.includes('Quota') || data.error.message.includes('limit')) {
+                    throw new Error("⏳ 잠시만요! AI가 너무 바쁩니다.\n1분만 쉬었다가 다시 눌러주세요. (사용량 제한)");
+                }
                 throw new Error(data.error.message);
             }
             resultDiv.innerText = data.candidates[0].content.parts[0].text;
 
         } catch (e) { 
             console.error(e);
-            resultDiv.innerText = "❌ 오류 내용:\n" + e.message; 
+            resultDiv.innerText = "❌ 결과:\n" + e.message; 
         }
         finally { btn.disabled = false; status.style.display = 'none'; }
     }
