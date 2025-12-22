@@ -7,7 +7,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     <style>
         body { font-family: 'Malgun Gothic', 'Noto Sans KR', sans-serif; margin: 0; padding: 0; background: #f0f2f5; }
-        .container { max-width: 500px; margin: 0 auto; background: white; min-height: 100vh; padding-bottom: 130px; }
+        .container { max-width: 500px; margin: 0 auto; background: white; min-height: 100vh; padding-bottom: 130px; position: relative; box-shadow: 0 0 15px rgba(0,0,0,0.1); }
         .header { width: 100%; background: #102e52; padding: 0; display: block; }
         .header img { width: 100%; height: auto; display: block; }
         .content { padding: 15px; }
@@ -76,8 +76,8 @@
     </div>
 </div>
 <script>
-    // ⚠️ [여기가 제일 중요합니다!]
-    // 아까 만드신 '새로운 키(yrXo로 끝나는 것)'를 따옴표 안에 꼭 넣어주세요!
+    // ⚠️ [여기가 제일 중요!] 아까 만든 '새 키(...yrXo)'를 다시 한 번 정확히 넣어주세요!
+    // (이전 코드에서 키가 사라졌을 수 있으니 꼭 다시 붙여넣으세요)
     const API_KEY = "AIzaSyAFwHmws86zdIxO88twgyvlMxSeZ3ByrXo"; 
 
     window.onload = function() {
@@ -115,7 +115,8 @@
                     parts.push({ inlineData: { data: compressedBase64, mimeType: "image/jpeg" } });
                 }
             }
-            const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${API_KEY}`, {
+            // [수정완료] v1beta(실험용) 대신 v1(정식) 주소로 변경! 이게 핵심입니다.
+            const response = await fetch(`https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash:generateContent?key=${API_KEY}`, {
                 method: 'POST', headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ contents: [{ parts: parts }] })
             });
