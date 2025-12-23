@@ -12,7 +12,7 @@
             padding-bottom: 110px; position: relative; box-shadow: 0 0 15px rgba(0,0,0,0.1); 
         }
         
-        /* [Ver 10.4] 버전 태그 */
+        /* [Ver 10.5] 버전 태그 */
         .header { width: 100%; background: #102e52; padding: 0; display: block; position: relative; }
         .header img { width: 100%; height: auto; display: block; }
         .version-tag {
@@ -29,21 +29,26 @@
         
         label { font-weight: bold; display: block; margin-bottom: 8px; color: #333; font-size: 0.95rem; }
         input[type="text"] { width: 100%; padding: 12px; border: 1px solid #ccc; border-radius: 6px; box-sizing: border-box; font-size: 1rem; }
-        input[readonly] { background: #e9ecef; color: #555; text-align: center; font-weight: bold; }
+        
+        /* 👇 [Ver 10.5] 진단일자(readonly) 글자 크기 축소 */
+        input[readonly] { 
+            background: #e9ecef; color: #555; text-align: center; font-weight: bold; 
+            font-size: 0.85rem; /* 크기 줄임 */
+            letter-spacing: -0.5px; /* 자간 좁힘 */
+        }
 
-        /* 👇 [Ver 10.4] 체크박스 6개를 위한 그리드 레이아웃 적용 */
         .checkbox-group { 
             display: grid; 
-            grid-template-columns: repeat(3, 1fr); /* 3칸씩 자동 배치 */
-            gap: 10px; /* 사이 간격 */
+            grid-template-columns: repeat(3, 1fr); 
+            gap: 10px; 
             margin-bottom: 20px; padding: 12px; 
             background: #fff; border: 2px solid #1c3664; border-radius: 8px; 
         }
         .check-item { 
             display: flex; align-items: center; 
-            font-weight: bold; font-size: 0.85rem; /* 글자 크기 미세 조정 */
+            font-weight: bold; font-size: 0.85rem; 
             cursor: pointer; color: #1c3664; 
-            white-space: nowrap; /* 줄바꿈 방지 */
+            white-space: nowrap; 
         }
         .check-item input { margin-right: 5px; transform: scale(1.2); }
 
@@ -53,8 +58,11 @@
         button { transition: all 0.1s ease-in-out; }
         button:active { transform: translateY(2px); box-shadow: 0 2px 3px rgba(0,0,0,0.2) !important; }
 
+        /* 👇 [Ver 10.5] 메인 버튼 높이(padding) 축소 */
         button.main-btn { 
-            width: 100%; padding: 18px; background: #1976D2; color: white; font-size: 18px; font-weight: bold; border-radius: 8px; cursor: pointer; margin-top: 10px;
+            width: 100%; 
+            padding: 12px; /* 18px -> 12px 로 줄임 */
+            background: #1976D2; color: white; font-size: 18px; font-weight: bold; border-radius: 8px; cursor: pointer; margin-top: 10px;
             border: 2px solid #0d47a1; box-shadow: 0 5px 8px rgba(0,0,0,0.3);
         }
         
@@ -114,7 +122,7 @@
 <div class="container" id="pdfArea">
     <div class="header">
         <img src="12.jpg" alt="청개구리 하자진단 AI분석앱" onerror="this.style.display='none'">
-        <div class="version-tag">Ver 10.4 (체크박스)</div>
+        <div class="version-tag">Ver 10.5 (디테일수정)</div>
     </div>
 
     <div class="content">
@@ -127,7 +135,7 @@
         <div class="row-group">
             <div class="half-box">
                 <label>🏠 장소입력</label>
-                <input type="text" id="locInput" placeholder="예: 거실 창틀 누수">
+                <input type="text" id="locInput" placeholder="예: 거실 창틀">
             </div>
             <div class="half-box">
                 <label>📅 진단일자</label>
@@ -255,7 +263,6 @@
             return;
         }
 
-        // ⭐ [Ver 10.4] 6개 항목 체크로 업데이트
         let checks = [];
         if(document.getElementById('chk1').checked) checks.push("건축하자");
         if(document.getElementById('chk2').checked) checks.push("창호하자");
