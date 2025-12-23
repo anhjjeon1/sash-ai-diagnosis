@@ -12,14 +12,16 @@
             padding-bottom: 130px; position: relative; box-shadow: 0 0 15px rgba(0,0,0,0.1); 
         }
         
-        /* [Ver 10.0] PDF 파일 공유 (보라색 태그) */
+        /* [Ver 10.1] 버전 태그 크기 절반으로 축소 */
         .header { width: 100%; background: #102e52; padding: 0; display: block; position: relative; }
         .header img { width: 100%; height: auto; display: block; }
         .version-tag {
             position: absolute; bottom: 5px; right: 10px;
-            background: #9C27B0; color: #fff; /* 보라색 */
-            padding: 3px 8px; border-radius: 4px;
-            font-size: 0.8rem; font-weight: bold; box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+            background: #9C27B0; color: #fff;
+            padding: 2px 5px; /* 패딩 축소 */
+            border-radius: 4px;
+            font-size: 0.5rem; /* 폰트 크기 대폭 축소 */
+            font-weight: bold; box-shadow: 0 1px 2px rgba(0,0,0,0.2);
         }
 
         .content { padding: 15px; }
@@ -42,16 +44,67 @@
         .preview-area { width: 100%; height: 300px; background: #e9ecef; display: flex; align-items: center; justify-content: center; margin-bottom: 10px; overflow: hidden; border-radius: 8px; border: 2px dashed #ccc; }
         .preview-area img { width: 100%; height: 100%; object-fit: contain; }
         
-        button.main-btn { width: 100%; padding: 18px; background: #1976D2; color: white; border: none; font-size: 18px; font-weight: bold; border-radius: 8px; cursor: pointer; margin-top: 10px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+        /* =========================================
+           [Ver 10.1] 버튼 입체감 및 디자인 개선
+        ========================================= */
+        /* 공통 버튼 스타일 (그림자, 테두리, 눌림 효과) */
+        button { transition: all 0.1s ease-in-out; }
+        button:active { transform: translateY(2px); box-shadow: 0 2px 3px rgba(0,0,0,0.2) !important; }
+
+        /* 메인 버튼 (AI 진단 시작) */
+        button.main-btn { 
+            width: 100%; padding: 18px; background: #1976D2; color: white; font-size: 18px; font-weight: bold; border-radius: 8px; cursor: pointer; margin-top: 10px;
+            border: 2px solid #0d47a1; /* 진한 테두리 */
+            box-shadow: 0 5px 8px rgba(0,0,0,0.3); /* 깊은 그림자 */
+        }
         
-        /* 버튼 3개 배치 */
+        /* 하단 서브 버튼 3개 */
         .footer-buttons { display:flex; gap: 5px; margin-top: 20px; margin-bottom: 20px; }
-        button.sub-btn { flex: 1; padding: 14px 0; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; color: white; font-size: 0.9rem; }
+        button.sub-btn { 
+            flex: 1; padding: 14px 0; border-radius: 8px; cursor: pointer; font-weight: bold; color: white; font-size: 0.9rem;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.2); /* 그림자 추가 */
+        }
+        /* 각 버튼별 테두리 색상 지정 */
+        button.sub-btn.call { background:#2E7D32; border: 2px solid #1b5e20; }
+        button.sub-btn.kakao { background:#FEE500; color:#3C1E1E; border: 2px solid #f57f17; }
+        button.sub-btn.save { background:#1c3664; border: 2px solid #0d2546; }
         
+        /* 키 입력 버튼 */
+        #saveKeyBtn { 
+            width: 25%; padding: 8px; background: #ffc107; border-radius: 4px; font-weight: bold; cursor: pointer;
+            border: 2px solid #d39e00; box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+
+        /* =========================================
+           [Ver 10.1] 파일 입력창 커스텀 디자인
+        ========================================= */
+        /* 실제 파일 입력창 숨기기 */
+        input[type="file"] { display: none; }
+
+        /* 커스텀 '사진입력' 버튼 디자인 */
+        .custom-file-upload {
+            display: inline-block;
+            padding: 10px 20px;
+            cursor: pointer;
+            background: #546e7a; /* 회색 계열 버튼 */
+            color: white;
+            border-radius: 6px;
+            font-weight: bold;
+            font-size: 0.9rem;
+            border: 2px solid #37474f;
+            box-shadow: 0 3px 5px rgba(0,0,0,0.2);
+            transition: all 0.1s;
+        }
+        .custom-file-upload:active { transform: translateY(2px); box-shadow: 0 1px 2px rgba(0,0,0,0.2); }
+        
+        /* 파일 상태 텍스트 영역 */
+        .file-input-container { display: flex; align-items: center; gap: 10px; margin-top: 10px; }
+        .file-status { font-size: 0.85rem; color: #666; flex: 1; word-break: break-all; }
+        /* ========================================= */
+
         #apiKeyArea { margin-bottom: 15px; padding: 10px; background: #fff3cd; border: 1px solid #ffeeba; border-radius: 8px; display: none; }
         #apiKeyInput { width: 70%; padding: 8px; border: 1px solid #ccc; border-radius: 4px; }
-        #saveKeyBtn { width: 25%; padding: 8px; background: #ffc107; border: none; border-radius: 4px; font-weight: bold; cursor: pointer; }
-
+        
         .business-info {
             background: #1c3664; color: white; padding: 12px 20px; text-align: left;
             position: absolute; bottom: 0; width: 100%; box-sizing: border-box;
@@ -63,7 +116,7 @@
 
         body.pdf-mode .container { margin: 0; padding: 0; box-shadow: none; max-width: 100%; }
         body.pdf-mode .content { padding: 10px 20px; }
-        body.pdf-mode button, body.pdf-mode .footer-buttons, body.pdf-mode #status, body.pdf-mode input[type="file"], body.pdf-mode #apiKeyArea { display: none !important; }
+        body.pdf-mode button, body.pdf-mode .footer-buttons, body.pdf-mode #status, body.pdf-mode #apiKeyArea, body.pdf-mode .file-input-container { display: none !important; }
         body.pdf-mode input[type="text"], body.pdf-mode input[readonly] { border: none; background: transparent; padding: 0; font-weight: bold; }
         body.pdf-mode .checkbox-group { border: 1px solid #ccc; }
         body.pdf-mode .preview-area { border: none; background: transparent; height: auto; min-height: 250px; }
@@ -75,7 +128,7 @@
 <div class="container" id="pdfArea">
     <div class="header">
         <img src="12.jpg" alt="청개구리 하자진단 AI분석앱" onerror="this.style.display='none'">
-        <div class="version-tag">Ver 10.0 (파일공유)</div>
+        <div class="version-tag">Ver 10.1 (디자인개선)</div>
     </div>
 
     <div class="content">
@@ -111,19 +164,31 @@
         <div class="box">
             <label>📸 1. 현장 사진(필수)</label>
             <div class="preview-area"><img id="img1"></div>
-            <input type="file" id="file1" accept="image/*" onchange="preview(1)">
+            <div class="file-input-container">
+                <label for="file1" class="custom-file-upload">사진입력</label>
+                <span id="fileName1" class="file-status">파일선택을 눌러 사진을 입력해 주세요!</span>
+                <input type="file" id="file1" accept="image/*" onchange="preview(1)">
+            </div>
         </div>
 
         <div class="box">
             <label>📸 2. 상세/기타 사진(선택)</label>
             <div class="preview-area"><img id="img2"></div>
-            <input type="file" id="file2" accept="image/*" onchange="preview(2)">
+            <div class="file-input-container">
+                <label for="file2" class="custom-file-upload">사진입력</label>
+                <span id="fileName2" class="file-status">파일선택을 눌러 사진을 입력해 주세요!</span>
+                <input type="file" id="file2" accept="image/*" onchange="preview(2)">
+            </div>
         </div>
 
         <div class="box">
             <label>📸 3. 열화상/기타 사진(선택)</label>
             <div class="preview-area"><img id="img3"></div>
-            <input type="file" id="file3" accept="image/*" onchange="preview(3)">
+            <div class="file-input-container">
+                <label for="file3" class="custom-file-upload">사진입력</label>
+                <span id="fileName3" class="file-status">파일선택을 눌러 사진을 입력해 주세요!</span>
+                <input type="file" id="file3" accept="image/*" onchange="preview(3)">
+            </div>
         </div>
 
         <button class="main-btn" id="btnRun" onclick="runAI()">🚀 AI 정밀 진단 시작</button>
@@ -135,9 +200,9 @@
         </div>
 
         <div class="footer-buttons">
-            <button class="sub-btn" style="background:#2E7D32;" onclick="location.href='tel:1599-7380'">📞 문의</button>
-            <button class="sub-btn" id="shareBtn" style="background:#FEE500; color:#3C1E1E;" onclick="sharePDF()">📤 카톡전송</button>
-            <button class="sub-btn" style="background:#1c3664;" onclick="savePDF()">💾 저장</button>
+            <button class="sub-btn call" onclick="location.href='tel:1599-7380'">📞 문의</button>
+            <button class="sub-btn kakao" id="shareBtn" onclick="sharePDF()">📤 카톡전송</button>
+            <button class="sub-btn save" onclick="savePDF()">💾 저장</button>
         </div>
     </div>
 
@@ -170,13 +235,24 @@
         document.getElementById('apiKeyArea').style.display = 'none';
     }
 
+    // ⭐ [Ver 10.1] 파일 선택 시 안내 문구 변경 기능 추가
     function preview(num) {
         const fileBox = document.getElementById('file'+num);
         const imgTag = document.getElementById('img'+num);
+        const fileNameSpan = document.getElementById('fileName'+num); // 안내 문구 영역
+
         if (fileBox.files && fileBox.files[0]) {
             const reader = new FileReader();
             reader.onload = function(e) { imgTag.src = e.target.result; imgTag.style.display = 'block'; };
             reader.readAsDataURL(fileBox.files[0]);
+            // 파일이 선택되면 파일 이름으로 변경
+            fileNameSpan.innerText = "선택됨: " + fileBox.files[0].name;
+            fileNameSpan.style.color = "#1976D2"; // 선택되면 파란색으로
+        } else {
+            // 선택 취소 시 원래 문구로 복귀
+            fileNameSpan.innerText = "파일선택을 눌러 사진을 입력해 주세요!";
+             fileNameSpan.style.color = "#666";
+            imgTag.style.display = 'none';
         }
     }
 
@@ -231,16 +307,17 @@
                  if(data.error.message.includes('API key')) {
                      localStorage.removeItem("myGeminiKey");
                      document.getElementById('apiKeyArea').style.display = 'block';
-                     throw new Error("🚨 키가 잘못되었습니다. 다시 입력해주세요.");
+                     throw new Error("🚨 키가 잘못되었거나 만료되었습니다. 다시 입력해주세요.");
                  }
-                 if(data.error.message.includes('Quota')) {
-                    throw new Error("⏳ 사용량이 많습니다. 1분 뒤에 다시 시도해주세요.");
+                 if(data.error.message.includes('Quota') || data.error.message.includes('limit')) {
+                    throw new Error("⏳ 잠시만요! 사용량이 많아 잠시 쉬고 있습니다. 1분 뒤에 다시 눌러주세요.");
                 }
                 throw new Error(data.error.message);
             }
             
             let aiResult = data.candidates[0].content.parts[0].text;
             let finalMessage = "\n\n📢 하자진단에 따른 제시한 해결방법이 완료되지 않고 문의사항이 있으시면 아래의 1599-7380 버튼을 누르시면 자동으로 연결됩니다.";
+            
             resultDiv.innerText = aiResult + finalMessage;
 
         } catch (e) { 
@@ -250,7 +327,6 @@
         finally { btn.disabled = false; status.style.display = 'none'; }
     }
 
-    // ⭐ [Ver 10.0] PDF 파일을 생성해서 바로 공유하는 기능
     async function sharePDF() {
         const resultText = document.getElementById('result').innerText;
         if (!resultText || resultText.includes("진단 시작 버튼을 누르면")) {
@@ -260,23 +336,18 @@
 
         const btn = document.getElementById('shareBtn');
         const originalText = btn.innerText;
-        btn.innerText = "📄 파일 생성중..."; // 로딩 표시
+        btn.innerText = "📄 파일 생성중..."; 
         btn.disabled = true;
 
         try {
-            // 1. PDF 모드로 변경 (버튼 등 숨김)
             document.body.classList.add('pdf-mode');
             const element = document.getElementById('pdfArea');
             const opt = { margin: 0, filename: '청개구리하자진단.pdf', html2canvas: { scale: 2, useCORS: true, scrollY: 0 }, jsPDF: { unit: 'mm', format: 'a4' } };
-
-            // 2. PDF를 파일(Blob)로 생성
             const blob = await html2pdf().set(opt).from(element).output('blob');
-            document.body.classList.remove('pdf-mode'); // 모드 복귀
+            document.body.classList.remove('pdf-mode');
 
-            // 3. 파일 객체 만들기
             const file = new File([blob], "청개구리하자진단.pdf", { type: "application/pdf" });
 
-            // 4. 공유하기 (파일 전송)
             if (navigator.share && navigator.canShare && navigator.canShare({ files: [file] })) {
                 await navigator.share({
                     files: [file],
@@ -284,11 +355,10 @@
                     text: '고객님의 창호 진단 결과 보고서입니다.',
                 });
             } else {
-                throw new Error("이 기기에서는 파일 직접 공유를 지원하지 않습니다.");
+                throw new Error("파일 공유 미지원");
             }
         } catch (e) {
             console.error(e);
-            // 실패 시 안내 메시지
             alert("⚠️ 폰에서 바로 파일 전송이 안 되는 기기입니다.\n\n대신 [💾 저장] 버튼을 눌러 PDF를 저장하신 뒤,\n카톡 채팅방에서 [+] 버튼 -> '파일'을 눌러 전송해주세요!");
             document.body.classList.remove('pdf-mode');
         } finally {
