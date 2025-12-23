@@ -12,7 +12,7 @@
             padding-bottom: 110px; position: relative; box-shadow: 0 0 15px rgba(0,0,0,0.1); 
         }
         
-        /* [Ver 10.5] 버전 태그 */
+        /* 헤더 및 버전 태그 */
         .header { width: 100%; background: #102e52; padding: 0; display: block; position: relative; }
         .header img { width: 100%; height: auto; display: block; }
         .version-tag {
@@ -30,11 +30,9 @@
         label { font-weight: bold; display: block; margin-bottom: 8px; color: #333; font-size: 0.95rem; }
         input[type="text"] { width: 100%; padding: 12px; border: 1px solid #ccc; border-radius: 6px; box-sizing: border-box; font-size: 1rem; }
         
-        /* 👇 [Ver 10.5] 진단일자(readonly) 글자 크기 축소 */
         input[readonly] { 
             background: #e9ecef; color: #555; text-align: center; font-weight: bold; 
-            font-size: 0.85rem; /* 크기 줄임 */
-            letter-spacing: -0.5px; /* 자간 좁힘 */
+            font-size: 0.85rem; letter-spacing: -0.5px; 
         }
 
         .checkbox-group { 
@@ -52,52 +50,50 @@
         }
         .check-item input { margin-right: 5px; transform: scale(1.2); }
 
-       /* 사진 모양 아이콘 배경 추가된 코드 */
-.preview-area { 
-    width: 100%; 
-    height: 300px; 
-    background-color: #e9ecef; 
-    display: flex; 
-    align-items: center; 
-    justify-content: center; 
-    margin-bottom: 10px; 
-    overflow: hidden; 
-    border-radius: 8px; 
-    border: 2px dashed #ccc; 
-    
-    /* 배경 아이콘 추가 */
-    background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23bdc3c7'%3E%3cpath d='M21 19V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2zM8.5 13.5l2.5 3.01L14.5 12l4.5 6H5l3.5-4.5z'/%3E%3c/svg%3E");
-    background-repeat: no-repeat;
-    background-position: center;
-    background-size: 80px; 
-}
-
-.preview-area img { 
-    width: 100%; 
-    height: 100%; 
-    object-fit: contain; 
-    display: none; /* 이미지가 없으면 배경 아이콘이 보이도록 숨김 처리 */
-}
+        /* 👇 [수정됨] 사진 미리보기 영역 (배경 아이콘 추가) */
+        .preview-area { 
+            width: 100%; 
+            height: 300px; 
+            background-color: #e9ecef; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            margin-bottom: 10px; 
+            overflow: hidden; 
+            border-radius: 8px; 
+            border: 2px dashed #ccc; 
+            
+            /* 배경 이미지 (인화지/사진 아이콘) */
+            background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23bdc3c7'%3E%3cpath d='M21 19V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2zM8.5 13.5l2.5 3.01L14.5 12l4.5 6H5l3.5-4.5z'/%3E%3c/svg%3E");
+            background-repeat: no-repeat;
+            background-position: center;
+            background-size: 80px; 
+        }
+        /* 이미지가 없을 때는 숨김 (배경 아이콘이 보이게) */
+        .preview-area img { 
+            width: 100%; height: 100%; object-fit: contain; 
+            display: none; 
+        }
         
         button { transition: all 0.1s ease-in-out; }
         button:active { transform: translateY(2px); box-shadow: 0 2px 3px rgba(0,0,0,0.2) !important; }
 
-        /* 👇 [Ver 10.5] 메인 버튼 높이(padding) 축소 */
         button.main-btn { 
             width: 100%; 
-            padding: 12px; /* 18px -> 12px 로 줄임 */
+            padding: 12px; 
             background: #1976D2; color: white; font-size: 18px; font-weight: bold; border-radius: 8px; cursor: pointer; margin-top: 10px;
             border: 2px solid #0d47a1; box-shadow: 0 5px 8px rgba(0,0,0,0.3);
         }
         
-        .footer-buttons { display:flex; gap: 5px; margin-top: 20px; margin-bottom: 20px; }
+        /* 👇 [수정됨] 하단 버튼 그룹 */
+        .footer-buttons { display:flex; gap: 8px; margin-top: 20px; margin-bottom: 20px; }
         button.sub-btn { 
-            flex: 1; padding: 14px 0; border-radius: 8px; cursor: pointer; font-weight: bold; color: white; 
-            font-size: 0.8rem; box-shadow: 0 4px 6px rgba(0,0,0,0.2); 
+            flex: 1; /* 1:1 비율 */
+            padding: 14px 0; border-radius: 8px; cursor: pointer; font-weight: bold; color: white; 
+            font-size: 0.9rem; box-shadow: 0 4px 6px rgba(0,0,0,0.2); 
             display: flex; align-items: center; justify-content: center;
         }
-        button.sub-btn.call { background:#2E7D32; border: 2px solid #1b5e20; flex: 1.2; }
-        button.sub-btn.kakao { background:#FEE500; color:#3C1E1E; border: 2px solid #f57f17; }
+        button.sub-btn.call { background:#2E7D32; border: 2px solid #1b5e20; }
         button.sub-btn.save { background:#1c3664; border: 2px solid #0d2546; }
         
         #saveKeyBtn { 
@@ -138,6 +134,7 @@
         body.pdf-mode input[type="text"], body.pdf-mode input[readonly] { border: none; background: transparent; padding: 0; font-weight: bold; }
         body.pdf-mode .checkbox-group { border: 1px solid #ccc; }
         body.pdf-mode .preview-area { border: none; background: transparent; height: auto; min-height: 250px; }
+        body.pdf-mode .preview-area img { display: block !important; } /* PDF 저장시엔 이미지 강제 표시 */
         body.pdf-mode .business-info { position: relative; margin-top: 20px; padding: 10px 20px; }
     </style>
 </head>
@@ -146,7 +143,7 @@
 <div class="container" id="pdfArea">
     <div class="header">
         <img src="12.jpg" alt="청개구리 하자진단 AI분석앱" onerror="this.style.display='none'">
-        <div class="version-tag">Ver 10.5 (디테일수정)</div>
+        <div class="version-tag">Ver 10.6 (최종완성)</div>
     </div>
 
     <div class="content">
@@ -220,19 +217,19 @@
         </div>
 
         <div class="footer-buttons">
-          <button class="sub-btn call" onclick="location.href='tel:1599-7380'">
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="16" height="16" fill="white" style="margin-right:8px;">
-        <path d="M493.4 24.6l-104-24c-11.3-2.6-22.9 3.3-27.5 13.9l-48 112c-4.2 9.8-1.4 21.3 6.9 28l60.6 49.6c-36 76.7-98.9 140.5-177.2 177.2l-49.6-60.6c-6.8-8.3-18.2-11.1-28-6.9l-112 48C3.9 366.5-2 378.1.6 389.4l24 104C27.1 504.2 36.7 512 48 512c256.1 0 464-207.9 464-464 0-11.2-7.8-20.9-18.6-23.4z"/>
-    </svg>
-    
-    <div style="display:flex; flex-direction:column; line-height:1.2; text-align:left;">
-        <span style="font-size:0.7rem; font-weight:normal;">전화문의</span>
-        <span style="font-size:0.85rem; font-weight:bold;">1599-7380</span>
-    </div>
-</button>
-</button>
-            <button class="sub-btn kakao" id="shareBtn" onclick="sharePDF()">📤 카톡전송</button>
-            <button class="sub-btn save" onclick="savePDF()">💾 저장</button>
+            <button class="sub-btn call" onclick="location.href='tel:1599-7380'">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="16" height="16" fill="white" style="margin-right:8px;">
+                    <path d="M493.4 24.6l-104-24c-11.3-2.6-22.9 3.3-27.5 13.9l-48 112c-4.2 9.8-1.4 21.3 6.9 28l60.6 49.6c-36 76.7-98.9 140.5-177.2 177.2l-49.6-60.6c-6.8-8.3-18.2-11.1-28-6.9l-112 48C3.9 366.5-2 378.1.6 389.4l24 104C27.1 504.2 36.7 512 48 512c256.1 0 464-207.9 464-464 0-11.2-7.8-20.9-18.6-23.4z"/>
+                </svg>
+                문의(1599-7380)
+            </button>
+            
+            <button class="sub-btn save" onclick="savePDFWithGuide()">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" width="16" height="16" fill="white" style="margin-right:6px;">
+                    <path d="M64 32C28.7 32 0 60.7 0 96V416c0 35.3 28.7 64 64 64H384c35.3 0 64-28.7 64-64V173.3c0-17-6.7-33.3-18.7-45.3L352 50.7C340 38.7 323.7 32 306.7 32H64zm0 96c0-17.7 14.3-32 32-32H288c17.7 0 32 14.3 32 32v64c0 17.7-14.3 32-32 32H96c-17.7 0-32-14.3-32-32V128zM224 288a64 64 0 1 1 0 128 64 64 0 1 1 0-128z"/>
+                </svg>
+                결과 저장
+            </button>
         </div>
     </div>
 
@@ -266,6 +263,7 @@
         document.getElementById('apiKeyArea').style.display = 'none';
     }
 
+    // 👇 [수정됨] 사진 미리보기 함수 (이미지 있으면 보이고, 없으면 숨겨서 배경 아이콘 노출)
     function preview(num) {
         const fileBox = document.getElementById('file'+num);
         const imgTag = document.getElementById('img'+num);
@@ -273,14 +271,17 @@
 
         if (fileBox.files && fileBox.files[0]) {
             const reader = new FileReader();
-            reader.onload = function(e) { imgTag.src = e.target.result; imgTag.style.display = 'block'; };
+            reader.onload = function(e) { 
+                imgTag.src = e.target.result; 
+                imgTag.style.display = 'block'; // 이미지가 로드되면 보이게 함
+            };
             reader.readAsDataURL(fileBox.files[0]);
             fileNameSpan.innerText = "선택됨: " + fileBox.files[0].name;
             fileNameSpan.style.color = "#1976D2"; 
         } else {
             fileNameSpan.innerText = "사진입력 버튼을 눌러 사진을 입력해 주세요!";
              fileNameSpan.style.color = "#666";
-            imgTag.style.display = 'none';
+            imgTag.style.display = 'none'; // 취소하면 다시 숨김 (배경 아이콘 보임)
         }
     }
 
@@ -357,46 +358,6 @@
         finally { btn.disabled = false; status.style.display = 'none'; }
     }
 
-    async function sharePDF() {
-        const resultText = document.getElementById('result').innerText;
-        if (!resultText || resultText.includes("진단 시작 버튼을 누르면")) {
-            alert("먼저 AI 진단을 실행해주세요!");
-            return;
-        }
-
-        const btn = document.getElementById('shareBtn');
-        const originalText = btn.innerText;
-        btn.innerText = "📄 파일 생성중..."; 
-        btn.disabled = true;
-
-        try {
-            document.body.classList.add('pdf-mode');
-            const element = document.getElementById('pdfArea');
-            const opt = { margin: 0, filename: '청개구리하자진단.pdf', html2canvas: { scale: 2, useCORS: true, scrollY: 0 }, jsPDF: { unit: 'mm', format: 'a4' } };
-            const blob = await html2pdf().set(opt).from(element).output('blob');
-            document.body.classList.remove('pdf-mode');
-
-            const file = new File([blob], "청개구리하자진단.pdf", { type: "application/pdf" });
-
-            if (navigator.share && navigator.canShare && navigator.canShare({ files: [file] })) {
-                await navigator.share({
-                    files: [file],
-                    title: '청개구리 하자진단 결과',
-                    text: '고객님의 창호 진단 결과 보고서입니다.',
-                });
-            } else {
-                throw new Error("파일 공유 미지원");
-            }
-        } catch (e) {
-            console.error(e);
-            alert("⚠️ 폰에서 바로 파일 전송이 안 되는 기기입니다.\n\n대신 [💾 저장] 버튼을 눌러 PDF를 저장하신 뒤,\n카톡 채팅방에서 [+] 버튼 -> '파일'을 눌러 전송해주세요!");
-            document.body.classList.remove('pdf-mode');
-        } finally {
-            btn.innerText = originalText;
-            btn.disabled = false;
-        }
-    }
-
     function resizeImage(file) {
         return new Promise((resolve) => {
             const reader = new FileReader();
@@ -419,11 +380,30 @@
         });
     }
 
-    function savePDF() {
+    // 👇 [수정됨] 저장 기능 + 친절한 안내 팝업
+    function savePDFWithGuide() {
+        const resultText = document.getElementById('result').innerText;
+        if (!resultText || resultText.includes("진단 시작 버튼을 누르면")) {
+            alert("먼저 AI 진단을 실행해주세요!");
+            return;
+        }
+
         document.body.classList.add('pdf-mode');
         window.scrollTo(0, 0);
         const element = document.getElementById('pdfArea');
-        html2pdf().set({ margin:0, filename:'청개구리하자진단.pdf', html2canvas:{scale:2, useCORS:true, scrollY:0}, jsPDF:{unit:'mm', format:'a4'} }).from(element).save().then(()=> document.body.classList.remove('pdf-mode'));
+
+        html2pdf().set({ 
+            margin:0, 
+            filename:'청개구리하자진단.pdf', 
+            html2canvas:{scale:2, useCORS:true, scrollY:0}, 
+            jsPDF:{unit:'mm', format:'a4'} 
+        }).from(element).save().then(() => {
+            document.body.classList.remove('pdf-mode');
+            // 저장 완료 후 안내 메시지
+            setTimeout(() => {
+                alert("✅ 파일이 저장되었습니다!\n\n[내 파일] 또는 [다운로드] 폴더를 확인하세요.\n\n카톡 채팅방에서 [+] 버튼 -> [파일]을 눌러\n저장된 PDF를 전송하실 수 있습니다.");
+            }, 1000);
+        });
     }
 </script>
 
