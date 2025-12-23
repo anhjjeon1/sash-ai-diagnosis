@@ -9,11 +9,10 @@
         body { font-family: 'Malgun Gothic', 'Noto Sans KR', sans-serif; margin: 0; padding: 0; background: #f0f2f5; }
         .container { 
             max-width: 500px; margin: 0 auto; background: white; min-height: 100vh; 
-            padding-bottom: 110px; /* 푸터 높이 줄어듦에 따라 여백 조정 */
-            position: relative; box-shadow: 0 0 15px rgba(0,0,0,0.1); 
+            padding-bottom: 110px; position: relative; box-shadow: 0 0 15px rgba(0,0,0,0.1); 
         }
         
-        /* [Ver 10.3] 버전 태그 */
+        /* [Ver 10.4] 버전 태그 */
         .header { width: 100%; background: #102e52; padding: 0; display: block; position: relative; }
         .header img { width: 100%; height: auto; display: block; }
         .version-tag {
@@ -32,18 +31,25 @@
         input[type="text"] { width: 100%; padding: 12px; border: 1px solid #ccc; border-radius: 6px; box-sizing: border-box; font-size: 1rem; }
         input[readonly] { background: #e9ecef; color: #555; text-align: center; font-weight: bold; }
 
+        /* 👇 [Ver 10.4] 체크박스 6개를 위한 그리드 레이아웃 적용 */
         .checkbox-group { 
-            display: flex; justify-content: space-between; 
+            display: grid; 
+            grid-template-columns: repeat(3, 1fr); /* 3칸씩 자동 배치 */
+            gap: 10px; /* 사이 간격 */
             margin-bottom: 20px; padding: 12px; 
             background: #fff; border: 2px solid #1c3664; border-radius: 8px; 
         }
-        .check-item { display: flex; align-items: center; font-weight: bold; font-size: 0.9rem; cursor: pointer; color: #1c3664; }
+        .check-item { 
+            display: flex; align-items: center; 
+            font-weight: bold; font-size: 0.85rem; /* 글자 크기 미세 조정 */
+            cursor: pointer; color: #1c3664; 
+            white-space: nowrap; /* 줄바꿈 방지 */
+        }
         .check-item input { margin-right: 5px; transform: scale(1.2); }
 
         .preview-area { width: 100%; height: 300px; background: #e9ecef; display: flex; align-items: center; justify-content: center; margin-bottom: 10px; overflow: hidden; border-radius: 8px; border: 2px dashed #ccc; }
         .preview-area img { width: 100%; height: 100%; object-fit: contain; }
         
-        /* 버튼 스타일 */
         button { transition: all 0.1s ease-in-out; }
         button:active { transform: translateY(2px); box-shadow: 0 2px 3px rgba(0,0,0,0.2) !important; }
 
@@ -55,13 +61,10 @@
         .footer-buttons { display:flex; gap: 5px; margin-top: 20px; margin-bottom: 20px; }
         button.sub-btn { 
             flex: 1; padding: 14px 0; border-radius: 8px; cursor: pointer; font-weight: bold; color: white; 
-            /* 👇 [Ver 10.3] 글자 크기 자동 조절 (버튼 텍스트 길어짐 대비) */
-            font-size: 0.8rem; 
-            box-shadow: 0 4px 6px rgba(0,0,0,0.2); 
-            display: flex; align-items: center; justify-content: center; /* 텍스트 중앙 정렬 */
+            font-size: 0.8rem; box-shadow: 0 4px 6px rgba(0,0,0,0.2); 
+            display: flex; align-items: center; justify-content: center;
         }
-        /* 문의 버튼만 조금 더 넓게 쓰도록 flex 조절 가능하지만, 일단 1:1:1 유지하되 글자크기 줄임 */
-        button.sub-btn.call { background:#2E7D32; border: 2px solid #1b5e20; flex: 1.2; } /* 문의 버튼 살짝 키움 */
+        button.sub-btn.call { background:#2E7D32; border: 2px solid #1b5e20; flex: 1.2; }
         button.sub-btn.kakao { background:#FEE500; color:#3C1E1E; border: 2px solid #f57f17; }
         button.sub-btn.save { background:#1c3664; border: 2px solid #0d2546; }
         
@@ -70,7 +73,6 @@
             border: 2px solid #d39e00; box-shadow: 0 2px 4px rgba(0,0,0,0.2);
         }
 
-        /* 사진입력 버튼 스타일 */
         input[type="file"] { display: none; }
         .custom-file-upload {
             display: inline-block; padding: 6px 12px; cursor: pointer;
@@ -85,30 +87,15 @@
             overflow: hidden; text-overflow: ellipsis; letter-spacing: -0.5px; 
         }
 
-        /* =========================================
-           [Ver 10.3] 하단 비즈니스 정보 디자인 개선
-        ========================================= */
         .business-info {
             background: #1c3664; color: white; padding: 15px 15px; text-align: left;
             position: absolute; bottom: 0; width: 100%; box-sizing: border-box;
         }
-        /* 제목 크기 절반으로 축소 */
         .business-info h3 { margin: 0 0 5px 0; font-size: 0.8rem; font-weight: bold; color: #fff; }
-        
-        /* 본문 텍스트: 3줄 -> 2줄 통합 및 크기 축소 */
         .info-lines p {
-            margin: 2px 0;
-            font-size: 0.6rem; /* 전체 크기 작게 */
-            letter-spacing: -0.5px; /* 자간 좁혀서 한 줄에 많이 넣기 */
-            opacity: 0.9;
-            line-height: 1.3;
-            white-space: nowrap; /* 줄바꿈 방지 시도 (화면 넘치면 자동 줄바꿈) */
+            margin: 2px 0; font-size: 0.6rem; letter-spacing: -0.5px; opacity: 0.9; line-height: 1.3; white-space: nowrap;
         }
-        /* 모바일 화면에서 줄바꿈 허용하되 작게 */
-        @media (max-width: 400px) {
-            .info-lines p { white-space: normal; } 
-        }
-        /* ========================================= */
+        @media (max-width: 400px) { .info-lines p { white-space: normal; } }
 
         #apiKeyArea { margin-bottom: 15px; padding: 10px; background: #fff3cd; border: 1px solid #ffeeba; border-radius: 8px; display: none; }
         #apiKeyInput { width: 70%; padding: 8px; border: 1px solid #ccc; border-radius: 4px; }
@@ -127,7 +114,7 @@
 <div class="container" id="pdfArea">
     <div class="header">
         <img src="12.jpg" alt="청개구리 하자진단 AI분석앱" onerror="this.style.display='none'">
-        <div class="version-tag">Ver 10.3 (디자인완성)</div>
+        <div class="version-tag">Ver 10.4 (체크박스)</div>
     </div>
 
     <div class="content">
@@ -149,10 +136,12 @@
         </div>
 
         <div class="checkbox-group">
-            <label class="check-item"><input type="checkbox" id="chk1"> 창호하자</label>
-            <label class="check-item"><input type="checkbox" id="chk2"> 소음하자</label>
-            <label class="check-item"><input type="checkbox" id="chk3"> 건축하자</label>
-            <label class="check-item"><input type="checkbox" id="chk4"> 기타</label>
+            <label class="check-item"><input type="checkbox" id="chk1"> 건축하자</label>
+            <label class="check-item"><input type="checkbox" id="chk2"> 창호하자</label>
+            <label class="check-item"><input type="checkbox" id="chk3"> 결로하자</label>
+            <label class="check-item"><input type="checkbox" id="chk4"> 누수하자</label>
+            <label class="check-item"><input type="checkbox" id="chk5"> 소음하자</label>
+            <label class="check-item"><input type="checkbox" id="chk6"> 기타</label>
         </div>
 
         <div class="box">
@@ -266,11 +255,14 @@
             return;
         }
 
+        // ⭐ [Ver 10.4] 6개 항목 체크로 업데이트
         let checks = [];
-        if(document.getElementById('chk1').checked) checks.push("창호하자");
-        if(document.getElementById('chk2').checked) checks.push("소음하자");
-        if(document.getElementById('chk3').checked) checks.push("건축하자");
-        if(document.getElementById('chk4').checked) checks.push("기타");
+        if(document.getElementById('chk1').checked) checks.push("건축하자");
+        if(document.getElementById('chk2').checked) checks.push("창호하자");
+        if(document.getElementById('chk3').checked) checks.push("결로하자");
+        if(document.getElementById('chk4').checked) checks.push("누수하자");
+        if(document.getElementById('chk5').checked) checks.push("소음하자");
+        if(document.getElementById('chk6').checked) checks.push("기타");
         let checkStr = checks.length > 0 ? checks.join(", ") : "일반 하자";
 
         btn.disabled = true; status.style.display = 'block';
