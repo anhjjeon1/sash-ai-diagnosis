@@ -12,12 +12,12 @@
             padding-bottom: 130px; position: relative; box-shadow: 0 0 15px rgba(0,0,0,0.1); 
         }
         
-        /* [Ver 9.0] 공유 기능 추가 (진한 녹색 태그) */
+        /* [Ver 10.0] PDF 파일 공유 (보라색 태그) */
         .header { width: 100%; background: #102e52; padding: 0; display: block; position: relative; }
         .header img { width: 100%; height: auto; display: block; }
         .version-tag {
             position: absolute; bottom: 5px; right: 10px;
-            background: #00695c; color: #fff; /* 진한 녹색 */
+            background: #9C27B0; color: #fff; /* 보라색 */
             padding: 3px 8px; border-radius: 4px;
             font-size: 0.8rem; font-weight: bold; box-shadow: 0 2px 4px rgba(0,0,0,0.2);
         }
@@ -44,7 +44,7 @@
         
         button.main-btn { width: 100%; padding: 18px; background: #1976D2; color: white; border: none; font-size: 18px; font-weight: bold; border-radius: 8px; cursor: pointer; margin-top: 10px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
         
-        /* 버튼 3개 배치 (수리문의 / 공유 / PDF) */
+        /* 버튼 3개 배치 */
         .footer-buttons { display:flex; gap: 5px; margin-top: 20px; margin-bottom: 20px; }
         button.sub-btn { flex: 1; padding: 14px 0; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; color: white; font-size: 0.9rem; }
         
@@ -75,7 +75,7 @@
 <div class="container" id="pdfArea">
     <div class="header">
         <img src="12.jpg" alt="청개구리 하자진단 AI분석앱" onerror="this.style.display='none'">
-        <div class="version-tag">Ver 9.0 (공유)</div>
+        <div class="version-tag">Ver 10.0 (파일공유)</div>
     </div>
 
     <div class="content">
@@ -136,8 +136,8 @@
 
         <div class="footer-buttons">
             <button class="sub-btn" style="background:#2E7D32;" onclick="location.href='tel:1599-7380'">📞 문의</button>
-            <button class="sub-btn" style="background:#FEE500; color:#3C1E1E;" onclick="shareResult()">📤 카톡/공유</button>
-            <button class="sub-btn" style="background:#1c3664;" onclick="savePDF()">💾 PDF</button>
+            <button class="sub-btn" id="shareBtn" style="background:#FEE500; color:#3C1E1E;" onclick="sharePDF()">📤 카톡전송</button>
+            <button class="sub-btn" style="background:#1c3664;" onclick="savePDF()">💾 저장</button>
         </div>
     </div>
 
@@ -250,27 +250,50 @@
         finally { btn.disabled = false; status.style.display = 'none'; }
     }
 
-    // ⭐ [Ver 9.0] 공유 기능 함수
-    function shareResult() {
+    // ⭐ [Ver 10.0] PDF 파일을 생성해서 바로 공유하는 기능
+    async function sharePDF() {
         const resultText = document.getElementById('result').innerText;
         if (!resultText || resultText.includes("진단 시작 버튼을 누르면")) {
             alert("먼저 AI 진단을 실행해주세요!");
             return;
         }
 
-        // 모바일에서 '공유하기' 창 띄우기
-        if (navigator.share) {
-            navigator.share({
-                title: '청개구리 하자진단 결과',
-                text: resultText
-            })
-            .then(() => console.log('공유 성공'))
-            .catch((error) => console.log('공유 실패', error));
-        } else {
-            // PC 등 공유 기능이 없는 경우: 클립보드 복사
-            navigator.clipboard.writeText(resultText).then(() => {
-                alert("📋 진단 결과가 복사되었습니다!\n카톡이나 문자에 '붙여넣기' 하세요.");
-            });
+        const btn = document.getElementById('shareBtn');
+        const originalText = btn.innerText;
+        btn.innerText = "📄 파일 생성중..."; // 로딩 표시
+        btn.disabled = true;
+
+        try {
+            // 1. PDF 모드로 변경 (버튼 등 숨김)
+            document.body.classList.add('pdf-mode');
+            const element = document.getElementById('pdfArea');
+            const opt = { margin: 0, filename: '청개구리하자진단.pdf', html2canvas: { scale: 2, useCORS: true, scrollY: 0 }, jsPDF: { unit: 'mm', format: 'a4' } };
+
+            // 2. PDF를 파일(Blob)로 생성
+            const blob = await html2pdf().set(opt).from(element).output('blob');
+            document.body.classList.remove('pdf-mode'); // 모드 복귀
+
+            // 3. 파일 객체 만들기
+            const file = new File([blob], "청개구리하자진단.pdf", { type: "application/pdf" });
+
+            // 4. 공유하기 (파일 전송)
+            if (navigator.share && navigator.canShare && navigator.canShare({ files: [file] })) {
+                await navigator.share({
+                    files: [file],
+                    title: '청개구리 하자진단 결과',
+                    text: '고객님의 창호 진단 결과 보고서입니다.',
+                });
+            } else {
+                throw new Error("이 기기에서는 파일 직접 공유를 지원하지 않습니다.");
+            }
+        } catch (e) {
+            console.error(e);
+            // 실패 시 안내 메시지
+            alert("⚠️ 폰에서 바로 파일 전송이 안 되는 기기입니다.\n\n대신 [💾 저장] 버튼을 눌러 PDF를 저장하신 뒤,\n카톡 채팅방에서 [+] 버튼 -> '파일'을 눌러 전송해주세요!");
+            document.body.classList.remove('pdf-mode');
+        } finally {
+            btn.innerText = originalText;
+            btn.disabled = false;
         }
     }
 
