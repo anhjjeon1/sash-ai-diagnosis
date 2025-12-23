@@ -12,16 +12,14 @@
             padding-bottom: 130px; position: relative; box-shadow: 0 0 15px rgba(0,0,0,0.1); 
         }
         
-        /* [Ver 10.1] 버전 태그 크기 절반으로 축소 */
+        /* [Ver 10.2] 버전 태그 */
         .header { width: 100%; background: #102e52; padding: 0; display: block; position: relative; }
         .header img { width: 100%; height: auto; display: block; }
         .version-tag {
             position: absolute; bottom: 5px; right: 10px;
             background: #9C27B0; color: #fff;
-            padding: 2px 5px; /* 패딩 축소 */
-            border-radius: 4px;
-            font-size: 0.5rem; /* 폰트 크기 대폭 축소 */
-            font-weight: bold; box-shadow: 0 1px 2px rgba(0,0,0,0.2);
+            padding: 2px 5px; border-radius: 4px;
+            font-size: 0.5rem; font-weight: bold; box-shadow: 0 1px 2px rgba(0,0,0,0.2);
         }
 
         .content { padding: 15px; }
@@ -44,62 +42,63 @@
         .preview-area { width: 100%; height: 300px; background: #e9ecef; display: flex; align-items: center; justify-content: center; margin-bottom: 10px; overflow: hidden; border-radius: 8px; border: 2px dashed #ccc; }
         .preview-area img { width: 100%; height: 100%; object-fit: contain; }
         
-        /* =========================================
-           [Ver 10.1] 버튼 입체감 및 디자인 개선
-        ========================================= */
-        /* 공통 버튼 스타일 (그림자, 테두리, 눌림 효과) */
+        /* 버튼 스타일 (입체감 유지) */
         button { transition: all 0.1s ease-in-out; }
         button:active { transform: translateY(2px); box-shadow: 0 2px 3px rgba(0,0,0,0.2) !important; }
 
-        /* 메인 버튼 (AI 진단 시작) */
         button.main-btn { 
             width: 100%; padding: 18px; background: #1976D2; color: white; font-size: 18px; font-weight: bold; border-radius: 8px; cursor: pointer; margin-top: 10px;
-            border: 2px solid #0d47a1; /* 진한 테두리 */
-            box-shadow: 0 5px 8px rgba(0,0,0,0.3); /* 깊은 그림자 */
+            border: 2px solid #0d47a1; box-shadow: 0 5px 8px rgba(0,0,0,0.3);
         }
         
-        /* 하단 서브 버튼 3개 */
         .footer-buttons { display:flex; gap: 5px; margin-top: 20px; margin-bottom: 20px; }
         button.sub-btn { 
             flex: 1; padding: 14px 0; border-radius: 8px; cursor: pointer; font-weight: bold; color: white; font-size: 0.9rem;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.2); /* 그림자 추가 */
+            box-shadow: 0 4px 6px rgba(0,0,0,0.2); 
         }
-        /* 각 버튼별 테두리 색상 지정 */
         button.sub-btn.call { background:#2E7D32; border: 2px solid #1b5e20; }
         button.sub-btn.kakao { background:#FEE500; color:#3C1E1E; border: 2px solid #f57f17; }
         button.sub-btn.save { background:#1c3664; border: 2px solid #0d2546; }
         
-        /* 키 입력 버튼 */
         #saveKeyBtn { 
             width: 25%; padding: 8px; background: #ffc107; border-radius: 4px; font-weight: bold; cursor: pointer;
             border: 2px solid #d39e00; box-shadow: 0 2px 4px rgba(0,0,0,0.2);
         }
 
         /* =========================================
-           [Ver 10.1] 파일 입력창 커스텀 디자인
+           [Ver 10.2] 사진입력 버튼 크기 축소 및 디자인
         ========================================= */
-        /* 실제 파일 입력창 숨기기 */
         input[type="file"] { display: none; }
 
-        /* 커스텀 '사진입력' 버튼 디자인 */
         .custom-file-upload {
             display: inline-block;
-            padding: 10px 20px;
+            /* 👇 크기 축소: 패딩을 10px 20px -> 6px 12px 로 줄임 */
+            padding: 6px 12px; 
             cursor: pointer;
-            background: #546e7a; /* 회색 계열 버튼 */
+            background: #546e7a;
             color: white;
             border-radius: 6px;
             font-weight: bold;
-            font-size: 0.9rem;
+            font-size: 0.8rem; /* 글자 크기도 살짝 축소 */
             border: 2px solid #37474f;
-            box-shadow: 0 3px 5px rgba(0,0,0,0.2);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
             transition: all 0.1s;
+            white-space: nowrap; /* 버튼 글자 줄바꿈 방지 */
         }
         .custom-file-upload:active { transform: translateY(2px); box-shadow: 0 1px 2px rgba(0,0,0,0.2); }
         
-        /* 파일 상태 텍스트 영역 */
-        .file-input-container { display: flex; align-items: center; gap: 10px; margin-top: 10px; }
-        .file-status { font-size: 0.85rem; color: #666; flex: 1; word-break: break-all; }
+        .file-input-container { display: flex; align-items: center; gap: 8px; margin-top: 8px; }
+        
+        /* 👇 안내 문구 한 줄 처리 스타일 */
+        .file-status { 
+            font-size: 0.75rem; /* 글자 크기 축소 */
+            color: #666; 
+            flex: 1; 
+            white-space: nowrap; /* 한 줄 강제 */
+            overflow: hidden; 
+            text-overflow: ellipsis; /* 넘치면 ... 처리 */
+            letter-spacing: -0.5px; /* 자간을 좁혀서 더 많이 들어가게 */
+        }
         /* ========================================= */
 
         #apiKeyArea { margin-bottom: 15px; padding: 10px; background: #fff3cd; border: 1px solid #ffeeba; border-radius: 8px; display: none; }
@@ -128,7 +127,7 @@
 <div class="container" id="pdfArea">
     <div class="header">
         <img src="12.jpg" alt="청개구리 하자진단 AI분석앱" onerror="this.style.display='none'">
-        <div class="version-tag">Ver 10.1 (디자인개선)</div>
+        <div class="version-tag">Ver 10.2 (디자인개선)</div>
     </div>
 
     <div class="content">
@@ -166,7 +165,7 @@
             <div class="preview-area"><img id="img1"></div>
             <div class="file-input-container">
                 <label for="file1" class="custom-file-upload">사진입력</label>
-                <span id="fileName1" class="file-status">파일선택을 눌러 사진을 입력해 주세요!</span>
+                <span id="fileName1" class="file-status">사진입력 버튼을 눌러 사진을 입력해 주세요!</span>
                 <input type="file" id="file1" accept="image/*" onchange="preview(1)">
             </div>
         </div>
@@ -176,7 +175,7 @@
             <div class="preview-area"><img id="img2"></div>
             <div class="file-input-container">
                 <label for="file2" class="custom-file-upload">사진입력</label>
-                <span id="fileName2" class="file-status">파일선택을 눌러 사진을 입력해 주세요!</span>
+                <span id="fileName2" class="file-status">사진입력 버튼을 눌러 사진을 입력해 주세요!</span>
                 <input type="file" id="file2" accept="image/*" onchange="preview(2)">
             </div>
         </div>
@@ -186,7 +185,7 @@
             <div class="preview-area"><img id="img3"></div>
             <div class="file-input-container">
                 <label for="file3" class="custom-file-upload">사진입력</label>
-                <span id="fileName3" class="file-status">파일선택을 눌러 사진을 입력해 주세요!</span>
+                <span id="fileName3" class="file-status">사진입력 버튼을 눌러 사진을 입력해 주세요!</span>
                 <input type="file" id="file3" accept="image/*" onchange="preview(3)">
             </div>
         </div>
@@ -235,22 +234,20 @@
         document.getElementById('apiKeyArea').style.display = 'none';
     }
 
-    // ⭐ [Ver 10.1] 파일 선택 시 안내 문구 변경 기능 추가
     function preview(num) {
         const fileBox = document.getElementById('file'+num);
         const imgTag = document.getElementById('img'+num);
-        const fileNameSpan = document.getElementById('fileName'+num); // 안내 문구 영역
+        const fileNameSpan = document.getElementById('fileName'+num); 
 
         if (fileBox.files && fileBox.files[0]) {
             const reader = new FileReader();
             reader.onload = function(e) { imgTag.src = e.target.result; imgTag.style.display = 'block'; };
             reader.readAsDataURL(fileBox.files[0]);
-            // 파일이 선택되면 파일 이름으로 변경
             fileNameSpan.innerText = "선택됨: " + fileBox.files[0].name;
-            fileNameSpan.style.color = "#1976D2"; // 선택되면 파란색으로
+            fileNameSpan.style.color = "#1976D2"; 
         } else {
-            // 선택 취소 시 원래 문구로 복귀
-            fileNameSpan.innerText = "파일선택을 눌러 사진을 입력해 주세요!";
+            // 👇 [Ver 10.2] 취소 시 문구도 통일
+            fileNameSpan.innerText = "사진입력 버튼을 눌러 사진을 입력해 주세요!";
              fileNameSpan.style.color = "#666";
             imgTag.style.display = 'none';
         }
