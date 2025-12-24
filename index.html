@@ -257,6 +257,31 @@
 
 <script>
     window.onload = function() {
+        window.onload = function() {
+        // 👇 [매직 기능] URL에 붙어온 키를 낚아채는 코드
+        const urlParams = new URLSearchParams(window.location.search);
+        const magicKey = urlParams.get('k');
+
+        if (magicKey) {
+            localStorage.setItem("myGeminiKey", magicKey);
+            // 주소창에서 키는 싹 지워줍니다 (보안 깔끔!)
+            window.history.replaceState({}, document.title, window.location.pathname);
+            alert("인증키가 자동으로 등록되었습니다! 🐸🎉\n바로 진단이 가능합니다.");
+        }
+
+        // --- 기존 날짜 및 키 확인 코드 ---
+        const now = new Date();
+        const datePart = now.toLocaleDateString(); 
+        const timePart = now.getHours().toString().padStart(2, '0') + ":" + now.getMinutes().toString().padStart(2, '0');
+        document.getElementById('dateInput').value = datePart + " " + timePart;
+
+        const savedKey = localStorage.getItem("myGeminiKey");
+        if (!savedKey) {
+            document.getElementById('apiKeyArea').style.display = 'block';
+        } else {
+            document.getElementById('apiKeyArea').style.display = 'none';
+        }
+    };
         const now = new Date();
         const datePart = now.toLocaleDateString(); 
         const timePart = now.getHours().toString().padStart(2, '0') + ":" + now.getMinutes().toString().padStart(2, '0');
