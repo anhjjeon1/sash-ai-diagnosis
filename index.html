@@ -13,27 +13,28 @@
 
     <link rel="icon" href="12.jpg" type="image/jpeg">
     <link rel="apple-touch-icon" href="12.jpg">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     <style>
-        body { font-family: 'Malgun Gothic', 'Noto Sans KR', sans-serif; margin: 0; padding: 0; background: #f0f2f5; }
+        body { font-family: 'Malgun Gothic', 'Noto Sans KR', sans-serif; margin: 0; padding: 0; background: #f0f2f5; overflow-x: hidden; }
         
         .container { 
             max-width: 500px; margin: 0 auto; background: white; min-height: 100vh; 
             display: flex; flex-direction: column; 
             box-shadow: 0 0 15px rgba(0,0,0,0.1); 
             position: relative;
+            transition: transform 0.3s ease; /* 사이드바 열릴 때 이동 효과 */
         }
         
         .header { width: 100%; background: #102e52; padding: 0; display: block; position: relative; }
         .header img { width: 100%; height: auto; display: block; }
         
-        /* 👇 [수정됨] 버전 태그 위치 복구: 하단 우측 */
         .version-tag {
             position: absolute; 
-            bottom: 5px; /* 아래쪽에 위치 */
-            right: 10px; /* 오른쪽에 위치 */
-            background: #9C27B0; /* 보라색 배경 */
+            bottom: 5px; 
+            right: 10px; 
+            background: #9C27B0; 
             color: #fff;
             padding: 2px 5px; border-radius: 4px;
             font-size: 0.5rem; font-weight: bold; box-shadow: 0 1px 2px rgba(0,0,0,0.2);
@@ -142,9 +143,40 @@
         #apiKeyArea { margin-bottom: 15px; padding: 10px; background: #fff3cd; border: 1px solid #ffeeba; border-radius: 8px; display: none; }
         #apiKeyInput { width: 70%; padding: 8px; border: 1px solid #ccc; border-radius: 4px; }
 
-        body.pdf-mode .container { margin: 0; padding: 0; box-shadow: none; max-width: 100%; }
+        /* [추가됨] 사이드바 스타일 */
+        #historySidebar {
+            position: fixed; top: 0; right: -320px; width: 300px; height: 100%;
+            background: white; box-shadow: -2px 0 10px rgba(0,0,0,0.2);
+            z-index: 1000; transition: right 0.3s ease-in-out;
+            display: flex; flex-direction: column; border-left: 1px solid #ddd;
+        }
+        #historySidebar.open { right: 0; }
+        
+        /* [추가됨] 사이드바 토글 버튼 (화면 우측 고정) */
+        #historyToggleBtn {
+            position: fixed; top: 120px; right: 0; z-index: 999;
+            background: #1c3664; color: white; 
+            padding: 10px 12px; border-radius: 10px 0 0 10px;
+            box-shadow: -2px 2px 5px rgba(0,0,0,0.2); cursor: pointer;
+            border: 1px solid #0d2546; border-right: none;
+            transition: right 0.3s ease-in-out;
+        }
+
+        .history-item {
+            padding: 15px; border-bottom: 1px solid #eee; cursor: pointer;
+            transition: background 0.2s;
+        }
+        .history-item:hover { background: #f0f7ff; }
+        .history-date { font-size: 0.75rem; color: #888; margin-bottom: 4px; }
+        .history-loc { font-weight: bold; color: #1c3664; font-size: 0.9rem; margin-bottom: 4px; }
+        .history-desc { font-size: 0.8rem; color: #555; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+
+        body.pdf-mode .container { margin: 0; padding: 0; box-shadow: none; max-width: 100%; transform: none !important; }
         body.pdf-mode .content { padding: 10px 20px; }
         body.pdf-mode button, body.pdf-mode .footer-buttons, body.pdf-mode #status, body.pdf-mode #apiKeyArea, body.pdf-mode .file-input-container { display: none !important; }
+        /* PDF 모드에서 사이드바 버튼 숨김 */
+        body.pdf-mode #historyToggleBtn, body.pdf-mode #historySidebar { display: none !important; }
+        
         body.pdf-mode input[type="text"], body.pdf-mode input[readonly] { border: none; background: transparent; padding: 0; font-weight: bold; }
         body.pdf-mode .checkbox-group { border: 1px solid #ccc; }
         body.pdf-mode .preview-area { border: none; background: transparent; height: auto; min-height: 250px; }
@@ -154,10 +186,31 @@
 </head>
 <body>
 
+<div id="historyToggleBtn" onclick="toggleSidebar()">
+    <i class="fas fa-history" style="font-size: 1.2rem;"></i>
+</div>
+
+<div id="historySidebar">
+    <div style="padding: 15px; background: #1c3664; color: white; display: flex; justify-content: space-between; align-items: center;">
+        <span style="font-weight: bold;"><i class="fas fa-list-alt"></i> 진단 기록</span>
+        <button onclick="toggleSidebar()" style="background: none; border: none; color: white; cursor: pointer; font-size: 1.2rem;">
+            <i class="fas fa-times"></i>
+        </button>
+    </div>
+    <div id="historyList" style="flex: 1; overflow-y: auto;">
+        <div style="padding: 20px; text-align: center; color: #999; font-size: 0.9rem;">저장된 기록이 없습니다.</div>
+    </div>
+    <div style="padding: 10px; border-top: 1px solid #ddd; background: #f9f9f9;">
+        <button onclick="clearHistory()" style="width: 100%; padding: 8px; background: #d32f2f; color: white; border: none; border-radius: 4px; cursor: pointer;">
+            <i class="fas fa-trash-alt"></i> 기록 전체 삭제
+        </button>
+    </div>
+</div>
+
 <div class="container" id="pdfArea">
     <div class="header">
         <img src="12.jpg" alt="청개구리 하자진단 AI분석앱" onerror="this.style.display='none'">
-        <div class="version-tag">Ver 10.8 (위치복구)</div>
+        <div class="version-tag">Ver 10.9 (History)</div>
     </div>
 
     <div class="content">
@@ -266,6 +319,9 @@
         if (!savedKey) {
             document.getElementById('apiKeyArea').style.display = 'block';
         }
+        
+        // [추가됨] 저장된 기록 불러오기
+        renderHistory();
     };
 
     function saveApiKey() {
@@ -297,11 +353,80 @@
         }
     }
 
+    // [추가됨] 사이드바 토글 기능
+    function toggleSidebar() {
+        const sidebar = document.getElementById('historySidebar');
+        sidebar.classList.toggle('open');
+        
+        // 버튼 위치 조정 (사이드바 따라 이동)
+        const btn = document.getElementById('historyToggleBtn');
+        if (sidebar.classList.contains('open')) {
+            btn.style.right = "300px"; // 사이드바 너비만큼 이동
+        } else {
+            btn.style.right = "0";
+        }
+    }
+
+    // [추가됨] 기록 저장 기능
+    function saveHistory(location, resultText) {
+        let history = JSON.parse(localStorage.getItem('sash_diagnosis_history') || '[]');
+        const newEntry = {
+            id: Date.now(),
+            date: new Date().toLocaleString(),
+            location: location || "장소 미정",
+            result: resultText
+        };
+        history.unshift(newEntry); // 최신순 저장
+        localStorage.setItem('sash_diagnosis_history', JSON.stringify(history));
+        renderHistory();
+    }
+
+    // [추가됨] 기록 목록 렌더링
+    function renderHistory() {
+        const history = JSON.parse(localStorage.getItem('sash_diagnosis_history') || '[]');
+        const listEl = document.getElementById('historyList');
+        
+        if (history.length === 0) {
+            listEl.innerHTML = '<div style="padding: 20px; text-align: center; color: #999; font-size: 0.9rem;">저장된 기록이 없습니다.</div>';
+            return;
+        }
+
+        listEl.innerHTML = history.map(item => `
+            <div class="history-item" onclick="loadHistoryItem(${item.id})">
+                <div class="history-date">${item.date}</div>
+                <div class="history-loc"><i class="fas fa-map-marker-alt"></i> ${item.location}</div>
+                <div class="history-desc">${item.result.substring(0, 30)}...</div>
+            </div>
+        `).join('');
+    }
+
+    // [추가됨] 기록 불러오기
+    function loadHistoryItem(id) {
+        const history = JSON.parse(localStorage.getItem('sash_diagnosis_history') || '[]');
+        const item = history.find(h => h.id === id);
+        if (item) {
+            document.getElementById('locInput').value = item.location;
+            document.getElementById('result').innerText = item.result;
+            // 화면 스크롤 이동
+            document.getElementById('result').scrollIntoView({ behavior: 'smooth' });
+            toggleSidebar(); // 사이드바 닫기
+        }
+    }
+
+    // [추가됨] 기록 전체 삭제
+    function clearHistory() {
+        if(confirm('정말로 모든 진단 기록을 삭제하시겠습니까?')) {
+            localStorage.removeItem('sash_diagnosis_history');
+            renderHistory();
+        }
+    }
+
     async function runAI() {
         const btn = document.getElementById('btnRun');
         const status = document.getElementById('status');
         const resultDiv = document.getElementById('result');
         const API_KEY = localStorage.getItem("myGeminiKey");
+        const locationVal = document.getElementById('locInput').value; // 장소 값 가져오기
 
         if (!API_KEY) {
             alert("⚠️ API 키가 없습니다. 상단에 키를 입력하고 저장해주세요.");
@@ -324,7 +449,7 @@
 
         try {
             let parts = [{ 
-                text: `[전문가 정밀 진단 요청]\n장소: ${document.getElementById('locInput').value}\n` +
+                text: `[전문가 정밀 진단 요청]\n장소: ${locationVal}\n` +
                       `의심 하자 유형: ${checkStr}\n` +
                       `하자설명: ${document.getElementById('descInput').value}\n` +
                       `위 정보를 바탕으로 하자를 진단하되, 내용은 방대하지 않게 핵심적인 내용만 요약해서 다음 순서로 정리해줘.\n` +
@@ -361,7 +486,12 @@
             let aiResult = data.candidates[0].content.parts[0].text;
             let finalMessage = "\n\n📢 하자진단에 따른 제시한 해결방법이 완료되지 않고 문의사항이 있으시면 아래의 1599-7380 버튼을 누르시면 자동으로 연결됩니다.";
             
-            resultDiv.innerText = aiResult + finalMessage;
+            // 결과 표시
+            const finalResult = aiResult + finalMessage;
+            resultDiv.innerText = finalResult;
+
+            // [추가됨] 진단 성공 시 기록 저장
+            saveHistory(locationVal, finalResult);
 
         } catch (e) { 
             console.error(e);
