@@ -28,7 +28,7 @@
         
         <header class="bg-blue-600 p-4 text-white text-center relative">
             <h1 class="text-xl font-bold">청개구리 하자진단 AI분석앱</h1>
-            <p class="text-xs mt-1 opacity-80">Ver 10.9 (최종완성)</p>
+            <p class="text-xs mt-1 opacity-80">Ver 10.8</p>
         </header>
 
         <main class="p-5 pb-20">
@@ -72,32 +72,29 @@
             <div class="space-y-6 mb-6">
                 <div class="border rounded-lg p-4 bg-gray-50">
                     <h3 class="font-bold mb-2 text-sm">📸 1. 현장 사진(필수)</h3>
-                    <img id="preview1" src="" class="w-full h-48 object-cover rounded mb-2 bg-gray-200" onclick="triggerUpload(1)">
+                    <img id="preview1" src="https://via.placeholder.com/400x300?text=Photo+Input" class="w-full h-48 object-cover rounded mb-2 bg-gray-200" onclick="triggerUpload(1)">
                     <input type="file" id="fileInput1" accept="image/*" class="hidden" onchange="previewImage(event, 1)">
                     <button onclick="triggerUpload(1)" class="w-full bg-blue-100 text-blue-700 py-2 rounded font-bold text-sm">
                         사진입력
                     </button>
-                    <p class="text-xs text-center text-gray-500 mt-1">사진입력 버튼을 눌러 사진을 입력해 주세요!</p>
                 </div>
 
                 <div class="border rounded-lg p-4 bg-gray-50">
                     <h3 class="font-bold mb-2 text-sm">📸 2. 상세/기타 사진(선택)</h3>
-                    <img id="preview2" src="" class="w-full h-48 object-cover rounded mb-2 bg-gray-200" onclick="triggerUpload(2)">
+                    <img id="preview2" src="https://via.placeholder.com/400x300?text=Photo+Input" class="w-full h-48 object-cover rounded mb-2 bg-gray-200" onclick="triggerUpload(2)">
                     <input type="file" id="fileInput2" accept="image/*" class="hidden" onchange="previewImage(event, 2)">
                     <button onclick="triggerUpload(2)" class="w-full bg-blue-100 text-blue-700 py-2 rounded font-bold text-sm">
                         사진입력
                     </button>
-                    <p class="text-xs text-center text-gray-500 mt-1">사진입력 버튼을 눌러 사진을 입력해 주세요!</p>
                 </div>
 
                 <div class="border rounded-lg p-4 bg-gray-50">
                     <h3 class="font-bold mb-2 text-sm">📸 3. 열화상/기타 사진(선택)</h3>
-                    <img id="preview3" src="" class="w-full h-48 object-cover rounded mb-2 bg-gray-200" onclick="triggerUpload(3)">
+                    <img id="preview3" src="https://via.placeholder.com/400x300?text=Photo+Input" class="w-full h-48 object-cover rounded mb-2 bg-gray-200" onclick="triggerUpload(3)">
                     <input type="file" id="fileInput3" accept="image/*" class="hidden" onchange="previewImage(event, 3)">
                     <button onclick="triggerUpload(3)" class="w-full bg-blue-100 text-blue-700 py-2 rounded font-bold text-sm">
                         사진입력
                     </button>
-                    <p class="text-xs text-center text-gray-500 mt-1">사진입력 버튼을 눌러 사진을 입력해 주세요!</p>
                 </div>
             </div>
 
@@ -117,9 +114,9 @@
 
             <div class="grid grid-cols-3 gap-2 mt-6 print:hidden">
                 <a href="tel:1599-7380" class="flex items-center justify-center bg-green-600 text-white py-3 rounded-lg font-bold text-xs">
-                    <i class="fas fa-phone-alt mr-1"></i> 문의(1599-7380)
+                    <i class="fas fa-phone-alt mr-1"></i> 문의
                 </a>
-                <button id="kakao-link-btn" class="flex items-center justify-center bg-yellow-400 text-black py-3 rounded-lg font-bold text-xs">
+                <button id="kakao-link-btn" onclick="sendKakao()" class="flex items-center justify-center bg-yellow-400 text-black py-3 rounded-lg font-bold text-xs">
                     <i class="fas fa-comment mr-1"></i> 카톡전송
                 </button>
                 <button onclick="savePDF()" class="flex items-center justify-center bg-gray-600 text-white py-3 rounded-lg font-bold text-xs">
@@ -146,11 +143,26 @@
             document.getElementById('apiKeySection').style.display = 'none';
         }
 
-        // 카카오 초기화 (키가 없으면 오류가 날 수 있음, 이전 코드 유지)
+        // 카카오 초기화 (자신의 키를 입력해야 작동합니다)
         try {
             Kakao.init('YOUR_KAKAO_API_KEY'); 
         } catch (e) {
             console.log('카카오 키 미설정');
+        }
+
+        function sendKakao() {
+            try {
+                Kakao.Link.sendDefault({
+                    objectType: 'text',
+                    text: '청개구리 하자진단 앱으로 진단해보세요!',
+                    link: {
+                        mobileWebUrl: window.location.href,
+                        webUrl: window.location.href,
+                    },
+                });
+            } catch (e) {
+                alert('카카오톡 전송 실패: API 키를 확인해주세요.');
+            }
         }
 
         // API 키 저장
@@ -226,12 +238,12 @@
                 const messages = [
                     {
                         role: "system",
-                        content: "당신은 30년 경력의 베테랑 건축 시공 및 하자 보수 전문가 '청개구리 박사'입니다. 사진을 분석하여 원인, 해결책, 견적 범위를 친절하고 상세하게 설명해주세요."
+                        content: "당신은 30년 경력의 베테랑 건축 시공 및 하자 보수 전문가 '청개구리 박사'입니다."
                     },
                     {
                         role: "user",
                         content: [
-                            { type: "text", text: `장소: ${location}, 일자: ${date}, 유형: ${type}, 내용: ${desc}. 이 하자의 원인과 해결책을 진단해줘.` },
+                            { type: "text", text: `장소: ${location}, 일자: ${date}, 유형: ${type}, 내용: ${desc}. 분석해줘.` },
                             ...images.map(img => ({ type: "image_url", image_url: { url: img } }))
                         ]
                     }
@@ -275,20 +287,4 @@
 
         async function savePDF() {
             const buttons = document.querySelector('.print\\:hidden');
-            buttons.style.display = 'none';
-            window.scrollTo(0,0);
-            
-            const canvas = await html2canvas(document.getElementById('capture-area'), { scale: 2 });
-            const imgData = canvas.toDataURL('image/jpeg', 1.0);
-            const { jsPDF } = window.jspdf;
-            const pdf = new jsPDF('p', 'mm', 'a4');
-            const imgHeight = canvas.height * 210 / canvas.width;
-            
-            pdf.addImage(imgData, 'JPEG', 0, 0, 210, imgHeight);
-            pdf.save(`하자진단_${document.getElementById('location').value}.pdf`);
-            
-            buttons.style.display = 'grid';
-        }
-    </script>
-</body>
-</html>
+            buttons.style.display =
