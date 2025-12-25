@@ -4,66 +4,152 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>청개구리 하자진단 AI분석앱</title>
+    
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="청개구리 샤시 AI 정밀진단">
+    <meta property="og:description" content="사진만 찍으면 끝! AI 전문가가 우리집 창호 상태를 무료로 진단해드립니다.">
+    <meta property="og:image" content="12.jpg">
+    <meta property="og:url" content="https://anhjjeon1.github.io/sash-ai-diagnosis/">
+
+    <link rel="icon" href="12.jpg" type="image/jpeg">
+    <link rel="apple-touch-icon" href="12.jpg">
+
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     <style>
         body { font-family: 'Malgun Gothic', 'Noto Sans KR', sans-serif; margin: 0; padding: 0; background: #f0f2f5; }
+        
         .container { 
             max-width: 500px; margin: 0 auto; background: white; min-height: 100vh; 
-            padding-bottom: 130px; position: relative; box-shadow: 0 0 15px rgba(0,0,0,0.1); 
+            display: flex; flex-direction: column; 
+            box-shadow: 0 0 15px rgba(0,0,0,0.1); 
+            position: relative;
         }
         
-        /* [Ver 6.0] 최종 해결 버전 (남색 태그) */
         .header { width: 100%; background: #102e52; padding: 0; display: block; position: relative; }
         .header img { width: 100%; height: auto; display: block; }
+        
+        /* 👇 [수정됨] 버전 태그 위치 복구: 하단 우측 */
         .version-tag {
-            position: absolute; bottom: 5px; right: 10px;
-            background: #000080; color: #fff; /* 남색으로 변경 */
-            padding: 3px 8px; border-radius: 4px;
-            font-size: 0.8rem; font-weight: bold; box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+            position: absolute; 
+            bottom: 5px; /* 아래쪽에 위치 */
+            right: 10px; /* 오른쪽에 위치 */
+            background: #9C27B0; /* 보라색 배경 */
+            color: #fff;
+            padding: 2px 5px; border-radius: 4px;
+            font-size: 0.5rem; font-weight: bold; box-shadow: 0 1px 2px rgba(0,0,0,0.2);
         }
 
-        .content { padding: 15px; }
+        .content { padding: 15px; flex: 1; }
+
         .row-group { display: flex; gap: 10px; margin-bottom: 15px; }
         .half-box { flex: 1; }
         .box { margin-bottom: 15px; padding: 12px; border: 1px solid #ddd; border-radius: 8px; background: #f8f9fa; }
         
         label { font-weight: bold; display: block; margin-bottom: 8px; color: #333; font-size: 0.95rem; }
         input[type="text"] { width: 100%; padding: 12px; border: 1px solid #ccc; border-radius: 6px; box-sizing: border-box; font-size: 1rem; }
-        input[readonly] { background: #e9ecef; color: #555; text-align: center; font-weight: bold; }
+        
+        input[readonly] { 
+            background: #e9ecef; color: #555; text-align: center; font-weight: bold; 
+            font-size: 0.85rem; letter-spacing: -0.5px; 
+        }
 
         .checkbox-group { 
-            display: flex; justify-content: space-between; 
+            display: grid; 
+            grid-template-columns: repeat(3, 1fr); 
+            gap: 10px; 
             margin-bottom: 20px; padding: 12px; 
             background: #fff; border: 2px solid #1c3664; border-radius: 8px; 
         }
-        .check-item { display: flex; align-items: center; font-weight: bold; font-size: 0.9rem; cursor: pointer; color: #1c3664; }
+        .check-item { 
+            display: flex; align-items: center; 
+            font-weight: bold; font-size: 0.85rem; 
+            cursor: pointer; color: #1c3664; 
+            white-space: nowrap; 
+        }
         .check-item input { margin-right: 5px; transform: scale(1.2); }
 
-        .preview-area { width: 100%; height: 300px; background: #e9ecef; display: flex; align-items: center; justify-content: center; margin-bottom: 10px; overflow: hidden; border-radius: 8px; border: 2px dashed #ccc; }
-        .preview-area img { width: 100%; height: 100%; object-fit: contain; }
+        .preview-area { 
+            width: 100%; 
+            height: 300px; 
+            background-color: #e9ecef; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            margin-bottom: 10px; 
+            overflow: hidden; 
+            border-radius: 8px; 
+            border: 2px dashed #ccc; 
+            background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23bdc3c7'%3E%3cpath d='M21 19V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2zM8.5 13.5l2.5 3.01L14.5 12l4.5 6H5l3.5-4.5z'/%3E%3c/svg%3E");
+            background-repeat: no-repeat;
+            background-position: center;
+            background-size: 80px; 
+        }
+        .preview-area img { 
+            width: 100%; height: 100%; object-fit: contain; 
+            display: none; 
+        }
         
-        button.main-btn { width: 100%; padding: 18px; background: #1976D2; color: white; border: none; font-size: 18px; font-weight: bold; border-radius: 8px; cursor: pointer; margin-top: 10px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
-        button.sub-btn { width: 48%; padding: 14px; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; color: white; }
+        button { transition: all 0.1s ease-in-out; }
+        button:active { transform: translateY(2px); box-shadow: 0 2px 3px rgba(0,0,0,0.2) !important; }
+
+        button.main-btn { 
+            width: 100%; 
+            padding: 12px; 
+            background: #1976D2; color: white; font-size: 18px; font-weight: bold; border-radius: 8px; cursor: pointer; margin-top: 10px;
+            border: 2px solid #0d47a1; box-shadow: 0 5px 8px rgba(0,0,0,0.3);
+        }
         
-        #result { white-space: pre-wrap; background: #fff; border: 1px solid #333; padding: 15px; margin-top: 20px; min-height: 100px; line-height: 1.6; border-radius: 8px; }
-        .footer-buttons { display:flex; justify-content:space-between; margin-top: 20px; margin-bottom: 20px; }
+        .footer-buttons { display:flex; gap: 8px; margin-top: 20px; margin-bottom: 20px; }
+        button.sub-btn { 
+            flex: 1; 
+            padding: 14px 0; border-radius: 8px; cursor: pointer; font-weight: bold; color: white; 
+            font-size: 0.9rem; box-shadow: 0 4px 6px rgba(0,0,0,0.2); 
+            display: flex; align-items: center; justify-content: center;
+        }
+        button.sub-btn.call { background:#2E7D32; border: 2px solid #1b5e20; }
+        button.sub-btn.save { background:#1c3664; border: 2px solid #0d2546; }
+        
+        #saveKeyBtn { 
+            width: 25%; padding: 8px; background: #ffc107; border-radius: 4px; font-weight: bold; cursor: pointer;
+            border: 2px solid #d39e00; box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+
+        input[type="file"] { display: none; }
+        .custom-file-upload {
+            display: inline-block; padding: 6px 12px; cursor: pointer;
+            background: #546e7a; color: white; border-radius: 6px;
+            font-weight: bold; font-size: 0.8rem; border: 2px solid #37474f;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2); transition: all 0.1s; white-space: nowrap;
+        }
+        .custom-file-upload:active { transform: translateY(2px); box-shadow: 0 1px 2px rgba(0,0,0,0.2); }
+        .file-input-container { display: flex; align-items: center; gap: 8px; margin-top: 8px; }
+        .file-status { 
+            font-size: 0.75rem; color: #666; flex: 1; white-space: nowrap; 
+            overflow: hidden; text-overflow: ellipsis; letter-spacing: -0.5px; 
+        }
 
         .business-info {
-            background: #1c3664; color: white; padding: 12px 20px; text-align: left;
-            position: absolute; bottom: 0; width: 100%; box-sizing: border-box;
+            background: #1c3664; color: white; padding: 15px 15px; text-align: left;
+            width: 100%; box-sizing: border-box;
+            margin-top: auto; 
         }
-        .business-info h3 { margin: 0 0 3px 0; font-size: 1.1rem; font-weight: bold; }
-        .info-text { font-size: 0.55rem; letter-spacing: -0.5px; opacity: 0.9; margin: 2px 0; white-space: nowrap; }
-        .contact-text { font-size: 0.7rem; margin: 2px 0; opacity: 0.9; }
-        .copy-text { margin-top: 5px; opacity: 0.6; font-size: 0.6rem; }
+        .business-info h3 { margin: 0 0 5px 0; font-size: 0.8rem; font-weight: bold; color: #fff; }
+        .info-lines p {
+            margin: 2px 0; font-size: 0.6rem; letter-spacing: -0.5px; opacity: 0.9; line-height: 1.3; white-space: nowrap;
+        }
+        @media (max-width: 400px) { .info-lines p { white-space: normal; } }
+
+        #apiKeyArea { margin-bottom: 15px; padding: 10px; background: #fff3cd; border: 1px solid #ffeeba; border-radius: 8px; display: none; }
+        #apiKeyInput { width: 70%; padding: 8px; border: 1px solid #ccc; border-radius: 4px; }
 
         body.pdf-mode .container { margin: 0; padding: 0; box-shadow: none; max-width: 100%; }
         body.pdf-mode .content { padding: 10px 20px; }
-        body.pdf-mode button, body.pdf-mode .footer-buttons, body.pdf-mode #status, body.pdf-mode input[type="file"] { display: none !important; }
+        body.pdf-mode button, body.pdf-mode .footer-buttons, body.pdf-mode #status, body.pdf-mode #apiKeyArea, body.pdf-mode .file-input-container { display: none !important; }
         body.pdf-mode input[type="text"], body.pdf-mode input[readonly] { border: none; background: transparent; padding: 0; font-weight: bold; }
         body.pdf-mode .checkbox-group { border: 1px solid #ccc; }
         body.pdf-mode .preview-area { border: none; background: transparent; height: auto; min-height: 250px; }
-        body.pdf-mode .business-info { position: relative; margin-top: 20px; padding: 10px 20px; }
+        body.pdf-mode .preview-area img { display: block !important; }
+        body.pdf-mode .business-info { margin-top: 20px; padding: 10px 20px; }
     </style>
 </head>
 <body>
@@ -71,14 +157,20 @@
 <div class="container" id="pdfArea">
     <div class="header">
         <img src="12.jpg" alt="청개구리 하자진단 AI분석앱" onerror="this.style.display='none'">
-        <div class="version-tag">Ver 6.0 (해결)</div>
+        <div class="version-tag">Ver 10.8 (위치복구)</div>
     </div>
 
     <div class="content">
+        <div id="apiKeyArea">
+            <label style="font-size:0.8rem; margin-bottom:5px;">🔑 API 키를 입력하세요 (최초 1회)</label>
+            <input type="text" id="apiKeyInput" placeholder="여기에 키 붙여넣기">
+            <button id="saveKeyBtn" onclick="saveApiKey()">저장</button>
+        </div>
+
         <div class="row-group">
             <div class="half-box">
                 <label>🏠 장소입력</label>
-                <input type="text" id="locInput" placeholder="예: 거실 창틀 누수">
+                <input type="text" id="locInput" placeholder="예: 거실 창틀">
             </div>
             <div class="half-box">
                 <label>📅 진단일자</label>
@@ -87,10 +179,12 @@
         </div>
 
         <div class="checkbox-group">
-            <label class="check-item"><input type="checkbox" id="chk1"> 창호하자</label>
-            <label class="check-item"><input type="checkbox" id="chk2"> 소음하자</label>
-            <label class="check-item"><input type="checkbox" id="chk3"> 건축하자</label>
-            <label class="check-item"><input type="checkbox" id="chk4"> 기타</label>
+            <label class="check-item"><input type="checkbox" id="chk1"> 건축하자</label>
+            <label class="check-item"><input type="checkbox" id="chk2"> 창호하자</label>
+            <label class="check-item"><input type="checkbox" id="chk3"> 결로하자</label>
+            <label class="check-item"><input type="checkbox" id="chk4"> 누수하자</label>
+            <label class="check-item"><input type="checkbox" id="chk5"> 소음하자</label>
+            <label class="check-item"><input type="checkbox" id="chk6"> 기타</label>
         </div>
 
         <div class="box">
@@ -101,64 +195,105 @@
         <div class="box">
             <label>📸 1. 현장 사진(필수)</label>
             <div class="preview-area"><img id="img1"></div>
-            <input type="file" id="file1" accept="image/*" onchange="preview(1)">
+            <div class="file-input-container">
+                <label for="file1" class="custom-file-upload">사진입력</label>
+                <span id="fileName1" class="file-status">사진입력 버튼을 눌러 사진을 입력해 주세요!</span>
+                <input type="file" id="file1" accept="image/*" onchange="preview(1)">
+            </div>
         </div>
 
         <div class="box">
             <label>📸 2. 상세/기타 사진(선택)</label>
             <div class="preview-area"><img id="img2"></div>
-            <input type="file" id="file2" accept="image/*" onchange="preview(2)">
+            <div class="file-input-container">
+                <label for="file2" class="custom-file-upload">사진입력</label>
+                <span id="fileName2" class="file-status">사진입력 버튼을 눌러 사진을 입력해 주세요!</span>
+                <input type="file" id="file2" accept="image/*" onchange="preview(2)">
+            </div>
         </div>
 
         <div class="box">
             <label>📸 3. 열화상/기타 사진(선택)</label>
             <div class="preview-area"><img id="img3"></div>
-            <input type="file" id="file3" accept="image/*" onchange="preview(3)">
+            <div class="file-input-container">
+                <label for="file3" class="custom-file-upload">사진입력</label>
+                <span id="fileName3" class="file-status">사진입력 버튼을 눌러 사진을 입력해 주세요!</span>
+                <input type="file" id="file3" accept="image/*" onchange="preview(3)">
+            </div>
         </div>
 
         <button class="main-btn" id="btnRun" onclick="runAI()">🚀 AI 정밀 진단 시작</button>
         <div id="status" style="text-align:center; margin-top:10px; color:#1976D2; display:none; font-weight:bold;">⏳ AI 전문가가 정밀 진단 중입니다...</div>
 
         <div class="box" style="margin-top:20px;">
-            <label>💡 상세 진단 결과 및 수리 솔루션</label>
+            <label>💡 상세 진단결과 및 해결방법</label>
             <div id="result" style="min-height:50px;">진단 시작 버튼을 누르면 결과가 여기에 표시됩니다.</div>
         </div>
 
         <div class="footer-buttons">
-            <button class="sub-btn" style="background:#2E7D32;" onclick="location.href='tel:1599-7380'">📞 수리문의</button>
-            <button class="sub-btn" style="background:#1c3664;" onclick="savePDF()">💾 PDF 저장</button>
+            <button class="sub-btn call" onclick="location.href='tel:1599-7380'">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="16" height="16" fill="white" style="margin-right:8px;">
+                    <path d="M493.4 24.6l-104-24c-11.3-2.6-22.9 3.3-27.5 13.9l-48 112c-4.2 9.8-1.4 21.3 6.9 28l60.6 49.6c-36 76.7-98.9 140.5-177.2 177.2l-49.6-60.6c-6.8-8.3-18.2-11.1-28-6.9l-112 48C3.9 366.5-2 378.1.6 389.4l24 104C27.1 504.2 36.7 512 48 512c256.1 0 464-207.9 464-464 0-11.2-7.8-20.9-18.6-23.4z"/>
+                </svg>
+                문의(1599-7380)
+            </button>
+            <button class="sub-btn save" onclick="savePDFWithGuide()">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" width="16" height="16" fill="white" style="margin-right:6px;">
+                    <path d="M64 32C28.7 32 0 60.7 0 96V416c0 35.3 28.7 64 64 64H384c35.3 0 64-28.7 64-64V173.3c0-17-6.7-33.3-18.7-45.3L352 50.7C340 38.7 323.7 32 306.7 32H64zm0 96c0-17.7 14.3-32 32-32H288c17.7 0 32 14.3 32 32v64c0 17.7-14.3 32-32 32H96c-17.7 0-32-14.3-32-32V128zM224 288a64 64 0 1 1 0 128 64 64 0 1 1 0-128z"/>
+                </svg>
+                결과 저장
+            </button>
         </div>
     </div>
 
     <div class="business-info">
         <h3>청개구리샤시</h3>
-        <p class="info-text">상호 : 청개구리샤시 | 사업자등록번호 : 123-36-31426 | 대표 : 전영웅</p>
-        <p class="contact-text">고객센터 1599 - 7380 (상담시간 오전08:00 ~ 오후5시까지 일요일 제외)</p>
-        <p class="copy-text">COPYRIGHT ⓒ 2025 청개구리주택샤시. All Rights Reserved.</p>
+        <div class="info-lines">
+            <p>상호 : 청개구리샤시 | 사업자등록번호 : 123-36-31426 | 대표 : 전영웅</p>
+            <p>고객센터 1599-7380 (08:00~17:00 일요일제외) | COPYRIGHT ⓒ 2025 All Rights Reserved.</p>
+        </div>
     </div>
 </div>
 
 <script>
-    // ⚠️ 아까 만든 '새 키'를 그대로 사용하세요! (키는 정상입니다)
-    const API_KEY = "여기에_새_키를_붙여넣으세요"; 
-
     window.onload = function() {
         const now = new Date();
         const datePart = now.toLocaleDateString(); 
         const timePart = now.getHours().toString().padStart(2, '0') + ":" + now.getMinutes().toString().padStart(2, '0');
         document.getElementById('dateInput').value = datePart + " " + timePart;
+
+        const savedKey = localStorage.getItem("myGeminiKey");
+        if (!savedKey) {
+            document.getElementById('apiKeyArea').style.display = 'block';
+        }
     };
+
+    function saveApiKey() {
+        const inputKey = document.getElementById('apiKeyInput').value.trim();
+        if (!inputKey) { alert("키를 입력해주세요!"); return; }
+        localStorage.setItem("myGeminiKey", inputKey);
+        alert("키가 저장되었습니다!");
+        document.getElementById('apiKeyArea').style.display = 'none';
+    }
 
     function preview(num) {
         const fileBox = document.getElementById('file'+num);
         const imgTag = document.getElementById('img'+num);
+        const fileNameSpan = document.getElementById('fileName'+num); 
+
         if (fileBox.files && fileBox.files[0]) {
             const reader = new FileReader();
-            reader.onload = function(e) {
-                imgTag.src = e.target.result;
-                imgTag.style.display = 'block';
+            reader.onload = function(e) { 
+                imgTag.src = e.target.result; 
+                imgTag.style.display = 'block'; 
             };
             reader.readAsDataURL(fileBox.files[0]);
+            fileNameSpan.innerText = "선택됨: " + fileBox.files[0].name;
+            fileNameSpan.style.color = "#1976D2"; 
+        } else {
+            fileNameSpan.innerText = "사진입력 버튼을 눌러 사진을 입력해 주세요!";
+             fileNameSpan.style.color = "#666";
+            imgTag.style.display = 'none'; 
         }
     }
 
@@ -166,12 +301,22 @@
         const btn = document.getElementById('btnRun');
         const status = document.getElementById('status');
         const resultDiv = document.getElementById('result');
+        const API_KEY = localStorage.getItem("myGeminiKey");
+
+        if (!API_KEY) {
+            alert("⚠️ API 키가 없습니다. 상단에 키를 입력하고 저장해주세요.");
+            document.getElementById('apiKeyArea').style.display = 'block';
+            window.scrollTo(0, 0);
+            return;
+        }
 
         let checks = [];
-        if(document.getElementById('chk1').checked) checks.push("창호하자");
-        if(document.getElementById('chk2').checked) checks.push("소음하자");
-        if(document.getElementById('chk3').checked) checks.push("건축하자");
-        if(document.getElementById('chk4').checked) checks.push("기타");
+        if(document.getElementById('chk1').checked) checks.push("건축하자");
+        if(document.getElementById('chk2').checked) checks.push("창호하자");
+        if(document.getElementById('chk3').checked) checks.push("결로하자");
+        if(document.getElementById('chk4').checked) checks.push("누수하자");
+        if(document.getElementById('chk5').checked) checks.push("소음하자");
+        if(document.getElementById('chk6').checked) checks.push("기타");
         let checkStr = checks.length > 0 ? checks.join(", ") : "일반 하자";
 
         btn.disabled = true; status.style.display = 'block';
@@ -182,7 +327,8 @@
                 text: `[전문가 정밀 진단 요청]\n장소: ${document.getElementById('locInput').value}\n` +
                       `의심 하자 유형: ${checkStr}\n` +
                       `하자설명: ${document.getElementById('descInput').value}\n` +
-                      `위 정보를 바탕으로 하자의 원인과 상세한 수리방법(시공법)을 전문가 수준으로 진단해줘.` 
+                      `위 정보를 바탕으로 하자를 진단하되, 내용은 방대하지 않게 핵심적인 내용만 요약해서 다음 순서로 정리해줘.\n` +
+                      `1. 원인\n2. 증상\n3. 분석\n(고객이 이해하기 쉽게 전문가스럽지만 친절하게 작성해줘)` 
             }];
 
             for(let i=1; i<=3; i++) {
@@ -193,9 +339,6 @@
                 }
             }
 
-            // ⭐ [Ver 6.0 핵심] ⭐
-            // 실험용(2.0-exp) 대신 안정적인 'gemini-2.5-flash' 사용
-            // (아까 탐지기 명단 맨 위에 있던 놈입니다!)
             const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${API_KEY}`, {
                 method: 'POST', headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ contents: [{ parts: parts }] })
@@ -204,17 +347,25 @@
             const data = await response.json();
             
             if(data.error) {
-                // 또 "속도 위반" 오류가 나면 친절하게 알려줍니다.
-                if(data.error.message.includes('Quota') || data.error.message.includes('limit')) {
-                    throw new Error("⏳ 잠시만요! AI가 너무 바쁩니다.\n1분만 쉬었다가 다시 눌러주세요. (사용량 제한)");
+                 if(data.error.message.includes('API key')) {
+                     localStorage.removeItem("myGeminiKey");
+                     document.getElementById('apiKeyArea').style.display = 'block';
+                     throw new Error("🚨 키가 잘못되었거나 만료되었습니다. 다시 입력해주세요.");
+                 }
+                 if(data.error.message.includes('Quota') || data.error.message.includes('limit')) {
+                    throw new Error("⏳ 잠시만요! 사용량이 많아 잠시 쉬고 있습니다. 1분 뒤에 다시 눌러주세요.");
                 }
                 throw new Error(data.error.message);
             }
-            resultDiv.innerText = data.candidates[0].content.parts[0].text;
+            
+            let aiResult = data.candidates[0].content.parts[0].text;
+            let finalMessage = "\n\n📢 하자진단에 따른 제시한 해결방법이 완료되지 않고 문의사항이 있으시면 아래의 1599-7380 버튼을 누르시면 자동으로 연결됩니다.";
+            
+            resultDiv.innerText = aiResult + finalMessage;
 
         } catch (e) { 
             console.error(e);
-            resultDiv.innerText = "❌ 결과:\n" + e.message; 
+            resultDiv.innerText = "❌ 오류 내용:\n" + e.message; 
         }
         finally { btn.disabled = false; status.style.display = 'none'; }
     }
@@ -241,11 +392,28 @@
         });
     }
 
-    function savePDF() {
+    function savePDFWithGuide() {
+        const resultText = document.getElementById('result').innerText;
+        if (!resultText || resultText.includes("진단 시작 버튼을 누르면")) {
+            alert("먼저 AI 진단을 실행해주세요!");
+            return;
+        }
+
         document.body.classList.add('pdf-mode');
         window.scrollTo(0, 0);
         const element = document.getElementById('pdfArea');
-        html2pdf().set({ margin:0, filename:'청개구리하자진단.pdf', html2canvas:{scale:2, useCORS:true, scrollY:0}, jsPDF:{unit:'mm', format:'a4'} }).from(element).save().then(()=> document.body.classList.remove('pdf-mode'));
+
+        html2pdf().set({ 
+            margin:0, 
+            filename:'청개구리하자진단.pdf', 
+            html2canvas:{scale:2, useCORS:true, scrollY:0}, 
+            jsPDF:{unit:'mm', format:'a4'} 
+        }).from(element).save().then(() => {
+            document.body.classList.remove('pdf-mode');
+            setTimeout(() => {
+                alert("✅ 파일이 저장되었습니다!\n\n[내 파일] 또는 [다운로드] 폴더를 확인하세요.\n\n카톡 채팅방에서 [+] 버튼 -> [파일]을 눌러\n저장된 PDF를 전송하실 수 있습니다.");
+            }, 1000);
+        });
     }
 </script>
 
