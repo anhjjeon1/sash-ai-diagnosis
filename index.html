@@ -398,7 +398,7 @@
         const part1 = "AIzaSyAZRYWwExOUfQSZ";  // 여기에 키 앞부분 (약 10~20글자) 입력
         const part2 = "O6uC9pmDzvRsWckIDw";      // 여기에 나머지 뒷부분 입력
         
-        const API_KEY = part1 + part2; // 자동으로 합쳐집니다.
+        const API_KEY = part1 + "_" + part2; // 자동으로 합쳐집니다.
 
         if (API_KEY.includes("AIzaSy...") || API_KEY.length < 30) {
             alert("⚠️ 관리자 설정 필요: 소스코드 하단에 API 키를 입력해주세요.");
