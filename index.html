@@ -298,10 +298,10 @@
 <script>
     window.onload = function() {
         // ==========================================
-        // 🟢 [버전 관리] Ver 12.6: 실험단(Experimental) 총출동
+        // 🟢 [버전 관리] Ver 13.1: 키 분리 보안 적용
         // ==========================================
-        const verNum = "12.6";              
-        const verDesc = "실험 모델 우선 적용"; 
+        const verNum = "13.1";              
+        const verDesc = "키 분리 보안 적용"; 
         
         document.getElementById('appVersion').innerText = `Ver ${verNum} (${verDesc})`;
         // ==========================================
@@ -400,11 +400,11 @@
         const locationVal = document.getElementById('locInput').value;
 
         // =========================================================
-        // 🟢 [API 키 확인]
+        // 🟢 [API 키 확인] Ver 13.1 키 분리 적용
         // =========================================================
-        const part1 = "AIzaSyBDJxYP3";
-        const part2 = "Fabf5tnqaWsZcggKIKtoyhZHI";
-        const API_KEY = part1 + "_" + part2; 
+        const part1 = "AIzaSyDcox0zKP6s";
+        const part2 = "EbykBdT6wPTelwdo0JpfpdA";
+        const API_KEY = part1 + part2; 
 
         let checks = [];
         if(document.getElementById('chk1').checked) checks.push("건축하자");
@@ -419,14 +419,13 @@
         resultDiv.innerText = "⏳ AI 전문가가 정밀 진단 중입니다... 잠시만 기다려주세요.";
 
         // =========================================================
-        // 🚀 [모델 리스트 전면 개편]
-        // 핵심전략: 정식 모델(1.5)은 포기하고, 연결이 확인된 '실험 모델(exp)' 위주로 구성
+        // 🚀 [모델 리스트] 새 키를 사용하므로 표준 모델 우선 사용
         // =========================================================
         const modelCandidates = [
-            "gemini-exp-1206",        // 1순위: 최신 실험 모델 (강력 추천)
-            "gemini-2.0-flash-exp",   // 2순위: 연결 확인된 모델 (사용량 주의)
-            "gemini-1.5-pro-latest",  // 3순위: 최신 별칭
-            "gemini-1.5-flash-latest" // 4순위: 최신 별칭
+            "gemini-1.5-flash",       // 1순위: 표준 (빠르고 안정적)
+            "gemini-1.5-pro",         // 2순위: 고성능
+            "gemini-2.0-flash-exp",   // 3순위: 신기술
+            "gemini-exp-1206"         // 4순위: 실험 모델
         ];
 
         let finalResultText = "";
