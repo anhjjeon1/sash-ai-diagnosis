@@ -401,13 +401,13 @@
         const locationVal = document.getElementById('locInput').value;
 
         // =========================================================
-        // 🟢 [수정완료] API 키 오류 방지 (밑줄 제거)
+        // 🟢 [재수정] API 키 중간에 언더바(_)가 꼭 필요합니다!
         // =========================================================
         const part1 = "AIzaSyBDJxYP3";
         const part2 = "Fabf5tnqaWsZcggKIKtoyhZHI";
-        
-        // 주의: 키 사이에 밑줄(_)을 넣지 않고 바로 연결합니다.
-        const API_KEY = part1 + part2; 
+
+        // ⚠️ 다시 수정: 따옴표 안에 언더바(_)를 넣어서 연결해주세요.
+        const API_KEY = part1 + "_" + part2;
 
         let checks = [];
         if(document.getElementById('chk1').checked) checks.push("건축하자");
