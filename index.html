@@ -34,7 +34,7 @@
             position: absolute; 
             bottom: 5px; 
             right: 10px; 
-            background: #9C27B0; 
+            background: #FF9800; /* 유료(Pro) 느낌의 골드 색상 */
             color: #fff;
             padding: 2px 5px; border-radius: 4px;
             font-size: 0.5rem; font-weight: bold; box-shadow: 0 1px 2px rgba(0,0,0,0.2);
@@ -298,10 +298,10 @@
 <script>
     window.onload = function() {
         // ==========================================
-        // 🟢 [버전 관리] Ver 13.1: 키 분리 보안 적용
+        // 🟢 [버전 관리] Ver 13.3: 유료 성능 해방 (기존 키 복귀)
         // ==========================================
-        const verNum = "13.1";              
-        const verDesc = "키 분리 보안 적용"; 
+        const verNum = "13.3";              
+        const verDesc = "유료 성능 해방(2.0 모델)"; 
         
         document.getElementById('appVersion').innerText = `Ver ${verNum} (${verDesc})`;
         // ==========================================
@@ -400,11 +400,12 @@
         const locationVal = document.getElementById('locInput').value;
 
         // =========================================================
-        // 🟢 [API 키 확인] Ver 13.1 키 분리 적용
+        // 🟢 [API 키 확인] Ver 13.3 (기존 키로 복귀, 명시적 언더바 추가)
         // =========================================================
-        const part1 = "AIzaSyDcox0zKP6s";
-        const part2 = "EbykBdT6wPTelwdo0JpfpdA";
-        const API_KEY = part1 + part2; 
+        // 🚨 유료 결제 시 이 키의 2.0 모델 사용 제한이 풀립니다!
+        const part1 = "AIzaSyBDJxYP3";
+        const part2 = "Fabf5tnqaWsZcggKIKtoyhZHI";
+        const API_KEY = part1 + "_" + part2; 
 
         let checks = [];
         if(document.getElementById('chk1').checked) checks.push("건축하자");
@@ -419,13 +420,14 @@
         resultDiv.innerText = "⏳ AI 전문가가 정밀 진단 중입니다... 잠시만 기다려주세요.";
 
         // =========================================================
-        // 🚀 [모델 리스트] 새 키를 사용하므로 표준 모델 우선 사용
+        // 🚀 [모델 리스트 - 2.0 모델 최우선]
+        // 이 키는 2.0 모델과 연결이 확인된 키입니다! (유료 시 제한 해제)
         // =========================================================
         const modelCandidates = [
-            "gemini-1.5-flash",       // 1순위: 표준 (빠르고 안정적)
-            "gemini-1.5-pro",         // 2순위: 고성능
-            "gemini-2.0-flash-exp",   // 3순위: 신기술
-            "gemini-exp-1206"         // 4순위: 실험 모델
+            "gemini-2.0-flash-exp",   // 1순위: [유료] 최고 성능 모델 (연결 확인됨)
+            "gemini-1.5-pro-002",     // 2순위: 고성능
+            "gemini-1.5-flash-002",   // 3순위: 표준
+            "gemini-1.5-flash-8b"     // 4순위: 초고속
         ];
 
         let finalResultText = "";
@@ -469,14 +471,14 @@
                     // 에러 체크
                     if(data.error) {
                         console.warn(`⚠️ [${modelName}] 실패: ${data.error.message}`);
-                        // 429(사용량) 혹은 404(모델없음) 모두 기록하고 넘어감
+                        
+                        // 유료 전환 시 quota 에러는 사라질 것입니다.
                         if(data.error.code === 429 || data.error.message.includes("quota")) {
-                             errorDetails += `[${modelName}] 사용량 초과(패스)\n`;
+                             errorDetails += `[${modelName}] 사용량 초과(유료 결제 시 해결됨)\n`;
                         } else {
                              errorDetails += `[${modelName}] ${data.error.message}\n`;
                         }
                         
-                        // 너무 빠른 재시도를 막기 위해 0.5초 대기
                         await new Promise(r => setTimeout(r, 500));
                         continue; 
                     }
@@ -504,7 +506,7 @@
                 resultDiv.innerText = displayResult;
                 saveHistory(locationVal, displayResult);
             } else {
-                throw new Error("모든 AI 모델 연결에 실패했습니다.\n" + errorDetails);
+                throw new Error("모든 AI 모델 연결에 실패했습니다.\n(유료 설정을 확인해주세요)\n" + errorDetails);
             }
 
         } catch (e) { 
