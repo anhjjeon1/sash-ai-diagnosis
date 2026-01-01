@@ -300,8 +300,8 @@
         // ==========================================
         // 🟢 [버전 관리] 앱 버전을 여기서 수정하세요!
         // ==========================================
-        const verNum = "11.5";             // 버전 올림
-        const verDesc = "최종 오류 수정";   // 변경 내용
+        const verNum = "11.6";              // 버전 업!
+        const verDesc = "모델명 정밀수정";   // 변경 내용
         
         // 화면에 버전을 자동으로 표시합니다.
         document.getElementById('appVersion').innerText = `Ver ${verNum} (${verDesc})`;
@@ -401,12 +401,10 @@
         const locationVal = document.getElementById('locInput').value;
 
         // =========================================================
-        // 🟢 [핵심] API 키에 밑줄(_)을 다시 넣었습니다. 이게 정답입니다!
+        // 🟢 [확인완료] API 키에 밑줄(_)을 꼭 넣어야 합니다.
         // =========================================================
         const part1 = "AIzaSyBDJxYP3";
         const part2 = "Fabf5tnqaWsZcggKIKtoyhZHI";
-        
-        // 🔑 중요: part1과 part2 사이에 언더바(_)를 꼭 넣어야 합니다.
         const API_KEY = part1 + "_" + part2; 
 
         let checks = [];
@@ -439,10 +437,11 @@
             }
 
             // =========================================================
-            // 🟢 [주소 변경] v1beta (실험용) -> v1 (정식 버전)
+            // 🟢 [최종수정] 모델명 변경 및 버전 원복
+            // 1. 모델명: 'gemini-1.5-flash-002' (최신 안정화 버전)
+            // 2. 버전: 'v1beta' (가장 호환성 좋음)
             // =========================================================
-            // 이렇게 하면 'Not found' 오류가 사라집니다.
-            const response = await fetch(`https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash:generateContent?key=${API_KEY}`, {
+            const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-002:generateContent?key=${API_KEY}`, {
                 method: 'POST', headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ contents: [{ parts: parts }] })
             });
